@@ -37,8 +37,12 @@ class PersonUpdate(BaseModel):
 # ============================================================
 # Response（DB出力用）
 # ============================================================
-class Person(PersonBase):
+class Person(BaseModel):
     id: int
+    name: str
+    fee_category: str   #  出力は文字列じゃないとエラーになります。
+    ext1: Optional[str] = None
+    ext2: Optional[str] = None
     token: Optional[str] = None
     is_deleted: bool
     created_at: datetime

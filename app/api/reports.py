@@ -25,3 +25,33 @@ def get_today_logs(db: Session = Depends(get_db)):
         }
         for r in results
     ]
+
+
+
+@router.get("/today_counts", summary="Get Meal Counts for Today")
+def get_today_counts(db: Session = Depends(get_db)):
+    today = date.today()
+    results = crud_reports.get_today_meal_counts(db, today)
+
+    return [
+        {
+            "meal_id": r.meal_id,
+            "meal_name": r.meal_name,
+            "count": r.count,
+        }
+        for r in results
+    ]
+
+
+@router.get("/today_unanswered", summary="Get Persons Without Today's MealLog")
+def get_today_unanswered(db: Session = Depends(get_db)):
+    today = date.today()
+    results = crud_reports.get_today_unanswered(db, today)
+
+    return [
+        {
+            "person_id": r.person_id,
+            "person_name": r.person_name,
+        }
+        for r in results
+    ]
