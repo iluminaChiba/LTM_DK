@@ -45,3 +45,11 @@ docker ps
 
 ## Docker内のMySQLを操作する方法
 docker compose -f docker-compose.dev.yml exec db bash
+## mysqlの文字コード一覧
+SHOW VARIABLES LIKE 'character_set%';
+
+Docker内のmysqlのクライアント文字コードの変更は、my.cnfファイルを置くしか方法がない。
+で、そのmy.cnfファイルは、Windows側で設置すると、chmod644が効かないので、666のままになり、
+Dockerのセキュリティが働いて、読み込まない。だから、WSL側でフォルダを作り、そのフォルダに
+my.cnfをcpして、linux管理にしてから、chmod 6444しないといけない。
+この方法論に辿り着くまで、マジで大変だった。
