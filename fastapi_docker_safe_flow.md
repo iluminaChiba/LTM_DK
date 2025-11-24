@@ -53,3 +53,31 @@ Docker内のmysqlのクライアント文字コードの変更は、my.cnfファ
 Dockerのセキュリティが働いて、読み込まない。だから、WSL側でフォルダを作り、そのフォルダに
 my.cnfをcpして、linux管理にしてから、chmod 6444しないといけない。
 この方法論に辿り着くまで、マジで大変だった。
+
+以上の方法論だと、今度はamazon linuxで動かない。っていうか、wslのファイルシステム上にある
+ファイルは、windowsからは見えないので、git管理できない。だから、当然、リポジトリをクローン
+しても、ついてこない。つまり、my.cnfは、都度、環境ごとに手動配置するしかない。
+
+本プロジェクトでは、以下を定位置にする。
+
+ home/<user_name>/ltm_mysql_conf/my.cnf  
+
+各端末で、この場所にmy.cnfを設置する。
+以下はmy.cnfの内容 nanoで書くしかないね・・・・
+--------------------------------------------------
+[mysqld]
+character-set-server = utf8mb4
+collation-server = utf8mb4_general_ci
+
+[client]
+default-character-set = utf8mb4
+
+[mysql]
+default-character-set = utf8mb4
+--------------------------------------------------
+
+## 迷子になった時、ディレクトリを探すコマンド
+$ find / -name "LTM_DK" -type d
+
+## wsl側から見たデスクトップの場所
+/mnt/c/Users/canar/Desktop/LTM_DK$
