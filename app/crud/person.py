@@ -1,0 +1,59 @@
+# app/crud/person.py
+
+from sqlalchemy.orm import Session
+from app import models, schemas
+
+
+# ============================================================
+# Create
+# ============================================================
+def create_person(db: Session, data: schemas.PersonCreate):
+    person = models.Person(**data.model_dump())
+    db.add(person)
+    db.commit()
+    db.refresh(person)
+    return person
+
+
+# ============================================================
+# Read
+# ============================================================
+def get_person(db: Session, person_id: int):
+    return (
+        db.query(models.Person)
+        .filter(
+            models.Person.id == person_id,
+            models.Person.is_deleted == False
+        )
+        .first()
+    )
+
+
+def get_people(db: Session):
+    return (
+        db.query(models.Person)
+        .filter(models.Person.is_deleted == False)
+        .all()
+    )
+
+
+# ============================================================
+# Update
+# ============================================================
+def update_person(db: Session, person: models.Person, data: schemas.PersonUpdate):
+    updated_data = data.model_dump(exclude_unset=True)
+    for key, value in updated_data.items():
+        setattr(person, key, value)
+
+    db.commit()
+    db.refresh(person)
+    return person
+
+
+# ============================================================
+# Logical Delete
+# ============================================================
+def delete_person(db: Session, person: models.Person):
+    person.is_deleted = True
+    db.commit()
+    return person

@@ -4,5 +4,6 @@ sqlalchemy>=2.0
 sqlalchemy[asyncio]
 asyncmy
 pydantic
+pymysql
 python-dotenv
 cryptography
