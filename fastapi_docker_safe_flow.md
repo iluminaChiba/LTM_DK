@@ -45,6 +45,9 @@ docker ps
 
 ## Docker内のMySQLを操作する方法
 docker compose -f docker-compose.dev.yml exec db bash
+
+sudo docker exec -it ltm_dk-db-1 bash
+
 ## mysqlの文字コード一覧
 SHOW VARIABLES LIKE 'character_set%';
 
