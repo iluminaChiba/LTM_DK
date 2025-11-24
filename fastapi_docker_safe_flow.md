@@ -42,3 +42,6 @@ docker compose -f docker-compose.dev.yml down --remove-orphans
 ```
 docker ps
 ```
+
+## Docker内のMySQLを操作する方法
+docker compose -f docker-compose.dev.yml exec db bash

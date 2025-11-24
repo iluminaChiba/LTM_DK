@@ -1,0 +1,48 @@
+# app/schemas/person.py
+from datetime import datetime
+from typing import Optional, Literal
+from pydantic import BaseModel
+
+
+# ============================================================
+# Base
+# ============================================================
+class PersonBase(BaseModel):
+    name: str
+    fee_category: Literal['visitor', 'trainee', 'normal'] = 'normal'
+    ext1: Optional[str] = None
+    ext2: Optional[str] = None
+
+
+# ============================================================
+# Create（API入力用）
+# ============================================================
+class PersonCreate(PersonBase):
+    pass
+
+
+# ============================================================
+# Update（PATCH 用）
+# ============================================================
+class PersonUpdate(BaseModel):
+    name: Optional[str] = None
+    fee_category: Optional[
+        Literal['visitor', 'trainee', 'normal']
+    ] = None
+    ext1: Optional[str] = None
+    ext2: Optional[str] = None
+    is_deleted: Optional[bool] = None
+
+
+# ============================================================
+# Response（DB出力用）
+# ============================================================
+class Person(PersonBase):
+    id: int
+    token: Optional[str] = None
+    is_deleted: bool
+    created_at: datetime
+    updated_at: datetime
+
+    class Config:
+        from_attributes = True
