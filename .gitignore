@@ -53,5 +53,5 @@ Icon?
 desktop.ini
 
 # === Local config (ホスト依存) ===
-# .env
-# .env.local
+.env
+.env.local
