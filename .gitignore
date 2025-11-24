@@ -1,0 +1,57 @@
+# === Python ===
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pkl
+*.db
+*.sqlite3
+
+# === Virtual environment ===
+.venv/
+venv/
+env/
+
+# === IDE / Editor ===
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# === Logs / Caches ===
+*.log
+*.out
+*.err
+.DS_Store
+*.bak
+*.tmp
+*.cache/
+
+# === Unit test / coverage ===
+htmlcov/
+.tox/
+.nox/
+.coverage
+.pytest_cache/
+
+# === Docker ===
+# コンテナ実体やボリュームの残骸をGitに混ぜない
+infra/.env
+infra/*_data/
+infra/*_volume/
+infra/*.pid
+
+# === Build artifacts ===
+build/
+dist/
+*.egg-info/
+
+# === OS-level ===
+Thumbs.db
+ehthumbs.db
+Icon?
+desktop.ini
+
+# === Local config (ホスト依存) ===
+# .env
+# .env.local

@@ -1,0 +1,17 @@
+# ベースイメージ
+FROM python:3.11-slim
+WORKDIR /workspace
+
+# 依存関係だけ先にコピーしてキャッシュ効率を最大化 本番用の .prod.txtの方です
+COPY ./infra/requirements.prod.txt /workspace/
+
+# 依存環境ファイルインストール 本番用の .prod.txtの方です
+RUN pip install --no-cache-dir -r /workspace/requirements.prod.txt
+# コード本体をあとでコピー（依存パッケージのキャッシュを維持）
+COPY ./app ./app
+
+# FastAPIアプリを起動（環境変数でポートを可変化）
+ENV PORT=8000
+
+# compose.prod.yml側のCMD(command)で上書きされてしまうので、ここではコメントアウト
+#CMD ["python", "-m", "uvicorn", "app.main:app", "--workers 4", "--host", "0.0.0.0", "--port", "8000"]

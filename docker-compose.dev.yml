@@ -1,0 +1,31 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: infra/Dockerfile.dev
+    #  container_name: ilumina-dev
+    working_dir: /workspace
+    volumes:
+      - .:/workspace # ← プロジェクト全体をマウント
+    ports:
+      - "8000:8000"
+    #開発用なので、--reloadオプション付き
+    command: >
+      python -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+    depends_on:
+      - db
+  db:
+    image: mysql:8.0
+    #  container_name: mysql_ltm
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: ltm_db
+      MYSQL_USER: ltm_user
+      MYSQL_PASSWORD: ltm_pass
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:

@@ -1,0 +1,30 @@
+# === Git ===
+.git/
+.gitignore
+
+# === Local dev ===
+.vscode/
+.venv/
+__pycache__/
+*.py[cod]
+
+# === OS junk ===
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# === Docs & temp ===
+*.log
+*.bak
+*.tmp
+
+# === VSCode Devcontainer ===
+.devcontainer/
+
+# === Infra artifacts ===
+infra/*.pid
+infra/*_data/
+infra/*_volume/
+
+# === Tests (if not needed in image) ===
+tests/

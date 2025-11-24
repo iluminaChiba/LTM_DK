@@ -1,0 +1,15 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: infra/Dockerfile.prod
+    # 本番時には、CI/CDツールで機械的な名前が付与される想定でコメントアウト
+    # container_name: ilumina-prod
+    working_dir: /workspace
+    #  volumes:
+    #  - ./app:/workspace/app:ro # ← 本番用は読み取り専用でマウント（必要に応じてコメントアウト解除）
+    ports:
+      - "8000:8000"
+    #本番用なので、--reloadオプションなし、代わりに workers を指定
+    command: >
+      python -m uvicorn app.main:app --workers 4 --host 0.0.0.0 --port 8000
