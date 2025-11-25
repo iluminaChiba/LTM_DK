@@ -1,5 +1,5 @@
 # app/crud/person.py
-
+import secrets
 from sqlalchemy.orm import Session
 from app import models, schemas
 
@@ -9,12 +9,16 @@ from app import models, schemas
 # ============================================================
 def create_person(db: Session, data: schemas.PersonCreate):
     person = models.Person(**data.model_dump())
+    # 64文字のランダム token を自動生成
+    token = secrets.token_hex(32)
+    person = models.Person(
+        **data.model_dump(),
+        token=token
+    )
     db.add(person)
     db.commit()
     db.refresh(person)
     return person
-
-
 # ============================================================
 # Read
 # ============================================================

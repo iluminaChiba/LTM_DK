@@ -12,7 +12,6 @@ app = FastAPI()
 # /api 配下のルーティング
 app.include_router(api_router, prefix="/api")
 
-
 # データベース接続テスト（同期版）
 @app.get("/")
 def db_test(db: Session = Depends(get_db)):
