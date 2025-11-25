@@ -10,7 +10,16 @@ from app import models
 
 router = APIRouter()
 
-@router.get("/entry/{token}")
+
+# ============================================================
+# Ping Test
+# ============================================================
+@router.get("/ping")
+def ping():
+    return {"message": "pong"}
+
+
+@router.get("/{token}")
 def identify_person(token: str, db: Session = Depends(get_db)):
     person = (
         db.query(models.Person)
@@ -34,7 +43,7 @@ def identify_person(token: str, db: Session = Depends(get_db)):
 # ============================================================
 # Lunch Log Registration（URL認証 → そのままmeal_log登録）
 # ============================================================
-@router.get("/entry/{token}/lunch")
+@router.get("/{token}/lunch")
 def register_lunch(token: str, db: Session = Depends(get_db)):
     # 1. token -> person を同定
     person = (
@@ -65,3 +74,6 @@ def register_lunch(token: str, db: Session = Depends(get_db)):
         "name": person.name,
         "meal_id": created_log.meal_id,
     }
+
+
+
