@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <title>今日のランチを選ぶ</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <style>
     body {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -115,9 +115,17 @@
     const buttons = Array.from(document.querySelectorAll(".js-menu-button"));
     // token がない場合はエラーメッセージを表示してボタンを無効化
     if (!token) {
-      statusEl.textContent = "URLが正しくありません。（token が見つかりません）";
-      statusEl.classList.add("status--error");
       buttons.forEach(b => b.disabled = true);
+      // SweetAlert2 を使ってモーダルでエラー表示
+      Swal.fire({
+        icon: 'error',
+        title: 'アクセスが無効です',
+        text: 'URLが正しくありません。（token が見つかりません）',
+        confirmButtonText: '閉じる'
+      });
+      // デバッグ兼視認性のため残す（UI的には非主役）
+      statusEl.textContent = "token がありません"; 
+      statusEl.classList.add("status--error");
     }
     // 各ボタンにクリックイベントを設定
     buttons.forEach(btn => {
@@ -132,12 +140,20 @@
 
         try {
           await postMealLog(menuId);
-          statusEl.textContent = "登録しました。ありがとうございました。";
-          statusEl.classList.add("status--ok");
+          await Swal.fire({
+            icon: 'success',
+            title: '登録しました',
+            text: 'ありがとうございました。',
+            confirmButtonText: 'OK'
+          });
         } catch (e) {
           console.error(e);
-          statusEl.textContent = "登録に失敗しました。時間をおいて再度お試しください。";
-          statusEl.classList.add("status--error");
+          await Swal.fire({
+            icon: 'error',
+            title: '登録に失敗しました',
+            text: '時間をおいて再度お試しください。',
+            confirmButtonText: '閉じる'
+          });
           setLoading(false); // 失敗時は再入力できるようにする
         }
       });
@@ -175,6 +191,7 @@
       buttons.forEach(btn => btn.disabled = loading);
     }
   </script>
+  
 </body>
 
 </html>

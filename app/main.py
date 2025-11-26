@@ -6,11 +6,16 @@ from sqlalchemy import text
 
 from app.database import get_db
 from app.api.router import api_router
+from fastapi.staticfiles import StaticFiles
 
 app = FastAPI()
 
 # /api 配下のルーティング
 app.include_router(api_router, prefix="/api")
+
+# DEBUG テスト用の静的ファイル
+app.mount("/frontend", StaticFiles(directory="frontend"), name="frontend")
+# END DEBUG
 
 # データベース接続テスト（同期版）
 @app.get("/")

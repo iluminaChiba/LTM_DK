@@ -61,3 +61,4 @@ def delete_person(db: Session, person: models.Person):
     person.is_deleted = True
     db.commit()
     return person
+
