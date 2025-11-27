@@ -45,9 +45,8 @@ async def preview_excel(file: UploadFile = File(...)) -> Dict[str, Any]:
     df["parsed_date"] = df["着日"].apply(normalize_date)
     df = df[df["parsed_date"].notna()]
 
-    # --- Step 7: 週の開始・終了日 ---
-    start_date = df["parsed_date"].min()
-    end_date = df["parsed_date"].max()
+    # --- Step 7: 週の開始日 ---
+    week_start = df["parsed_date"].min()
 
     # --- Step 8: vendor_item_id の正規化 ---
     # commit との整合性のため「int に変換」する
@@ -84,8 +83,7 @@ async def preview_excel(file: UploadFile = File(...)) -> Dict[str, Any]:
     result = {
         "filename": file.filename,
         "week": {
-            "start_date": start_date.isoformat(),
-            "end_date": end_date.isoformat(),
+            "week_start": week_start.isoformat()
         },
         "meals": meals_preview,
         "weekly_menu_items": weekly_menu_preview  # ← List[int]

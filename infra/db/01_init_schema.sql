@@ -71,8 +71,7 @@ CREATE TABLE meal_logs (
 -- ============================================
 CREATE TABLE weekly_menus (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  start_date DATE NOT NULL,
-  end_date DATE NOT NULL,
+  week_start DATE NOT NULL,
   meal_id INT NOT NULL,
   ext1 VARCHAR(255) DEFAULT NULL,
   ext2 VARCHAR(255) DEFAULT NULL,

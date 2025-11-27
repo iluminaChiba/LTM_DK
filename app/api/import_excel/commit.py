@@ -15,8 +15,7 @@ class ImportMealItem(BaseModel):
 
 
 class ImportWeek(BaseModel):
-    start_date: date
-    end_date: date
+    week_start: date
 
 
 class ImportPayload(BaseModel):
@@ -71,7 +70,7 @@ def commit_import(payload: ImportPayload,
     # ---------------------------------------------------------
     # Step 2: weekly_menus の登録（週単位）
     # ---------------------------------------------------------
-    week_start = payload.week.start_date
+    week_start = payload.week.week_start
 
     # vendor_item_id → meal.id への逆引き
     meal_map = {
@@ -87,8 +86,7 @@ def commit_import(payload: ImportPayload,
                                 detail=f"vendor_item_id {vendor_id } が meals に見つかりません。")
 
         wm = WeeklyMenu(
-            start_date = payload.week.start_date,
-            end_date   = payload.week.end_date,
+            week_start = payload.week.week_start,
             meal_id=meal_map[vendor_id]
         )
         db.add(wm)
