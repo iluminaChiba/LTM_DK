@@ -14,8 +14,8 @@ app = FastAPI()
 # /api 配下のルーティング
 app.include_router(api_router, prefix="/api")
 
-# DEBUG テスト用の静的ファイル
-app.mount("/test_static", StaticFiles(directory="frontend"), name="frontend")
+# DEBUG テスト用の静的ファイル あとで使いまわすかも
+app.mount("/test_static", StaticFiles(directory="statics"), name="statics")
 # END DEBUG
 
 def get_template_manager() -> TemplateManager:

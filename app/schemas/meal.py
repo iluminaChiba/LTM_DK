@@ -33,3 +33,12 @@ class Meal(MealBase):
 
     class Config:
         from_attributes = True
+
+
+class MealResponse(BaseModel):
+    id: int
+    name: str
+    category: Optional[str] = None
+    
+    class Config:
+        from_attributes = True        
