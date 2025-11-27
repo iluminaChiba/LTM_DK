@@ -1,6 +1,0 @@
-1. Windows の機能で「Linux用WSL」「仮想マシンプラットフォーム」を有効にする  
-2. 管理者 PowerShell で wsl --install を実行  
-3. PC を再起動  
-4. 再起動後、PowerShell で「wsl」と打って、Ubuntu が初回起動するか確認  
-5. 途中で止まったらスクショ  
-6. 進めた手順をメモ帳に控えておく
