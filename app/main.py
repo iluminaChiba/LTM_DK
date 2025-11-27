@@ -7,6 +7,7 @@ from sqlalchemy import text
 from app.database import get_db
 from app.api.router import api_router
 from fastapi.staticfiles import StaticFiles
+from app.template_manager import TemplateManager
 
 app = FastAPI()
 
@@ -14,14 +15,17 @@ app = FastAPI()
 app.include_router(api_router, prefix="/api")
 
 # DEBUG テスト用の静的ファイル
-app.mount("/frontend", StaticFiles(directory="frontend"), name="frontend")
+app.mount("/test_static", StaticFiles(directory="frontend"), name="frontend")
 # END DEBUG
 
-# データベース接続テスト（同期版）
-@app.get("/")
-def db_test(db: Session = Depends(get_db)):
-    result = db.execute(text("SELECT 1"))
-    return {
-        "message": "Database connection successful!",
-        "result": result.scalar()
-    }
+def get_template_manager() -> TemplateManager:
+    return TemplateManager("app/templates")
+
+# # データベース接続テスト（同期版）
+# @app.get("/")
+# def db_test(db: Session = Depends(get_db)):
+#     result = db.execute(text("SELECT 1"))
+#     return {
+#         "message": "Database connection successful!",
+#         "result": result.scalar()
+#     }

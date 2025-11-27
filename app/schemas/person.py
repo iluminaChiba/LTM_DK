@@ -50,3 +50,17 @@ class Person(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+# ============================================================
+# UI用レスポンス（トークンから人名取得）
+# ============================================================
+class PersonByTokenResponse(BaseModel):
+    """トークンから取得した人物情報（UI表示用）"""
+    id: int
+    name: str
+    fee_category: str
+    token: str
+
+    class Config:
+        from_attributes = True

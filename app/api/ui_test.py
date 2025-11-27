@@ -1,17 +1,31 @@
 # app/api/ui_test.py
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Depends, HTTPException
+from fastapi.responses import HTMLResponse
+from sqlalchemy.orm import Session
+from app.database import get_db
+from app.models.person import Person
+from app.schemas.person import PersonByTokenResponse
+from app.template_manager import TemplateManager
+from app.main import get_template_manager
 
 router = APIRouter()
 
-@router.post("/")
-async def meal_logs_uitest(request: Request):
-    payload = await request.json()
-    menu_id = payload.get("menu_id")
-    token = request.headers.get("X-Auth-Token")
-
-    print("=== SIMPLE LOG ===")
-    print("menu_id:", menu_id)
-    print("token  :", token)
-    print("===================")
-
-    return {"status": "ok"}
+@router.get("/{token}", response_class=HTMLResponse)
+def get_report(
+    token: str,
+    db: Session = Depends(get_db),
+    tm: TemplateManager = Depends(get_template_manager)
+):
+    # tokenからperson取得
+    person = db.query(Person).filter(Person.token == token).first()
+    
+    if not person:
+        raise HTTPException(status_code=404, detail="Person not found")
+    
+    # PydanticスキーマでデータをバリデーションしてからJinja2に渡す
+    person_data = PersonByTokenResponse.model_validate(person)
+    
+    # Jinja2テンプレートにPydanticオブジェクトを渡す
+    # テンプレート内で {{ person.name }} のようにアクセス可能
+    html = tm.render("ui_test.html", {"person": person_data})
+    return html
