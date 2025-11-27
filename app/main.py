@@ -7,7 +7,6 @@ from sqlalchemy import text
 from app.database import get_db
 from app.api.router import api_router
 from fastapi.staticfiles import StaticFiles
-from app.template_manager import TemplateManager
 
 app = FastAPI()
 
@@ -15,11 +14,8 @@ app = FastAPI()
 app.include_router(api_router, prefix="/api")
 
 # DEBUG テスト用の静的ファイル あとで使いまわすかも
-app.mount("/test_static", StaticFiles(directory="statics"), name="statics")
+app.mount("/statics", StaticFiles(directory="app/api/statics"), name="statics")
 # END DEBUG
-
-def get_template_manager() -> TemplateManager:
-    return TemplateManager("app/templates")
 
 # # データベース接続テスト（同期版）
 # @app.get("/")

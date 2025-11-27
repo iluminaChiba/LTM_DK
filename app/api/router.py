@@ -2,7 +2,7 @@
 
 from fastapi import APIRouter, Depends, Request
 from app.api import person, meal, meal_log, supply, reports, entry, ui_test, import_excel
-from app.main import get_template_manager
+from app.dependencies import get_template_manager
 from fastapi.responses import HTMLResponse
 from app.template_manager import TemplateManager
 

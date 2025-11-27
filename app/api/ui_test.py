@@ -7,7 +7,7 @@ from app.models.person import Person
 from app.schemas.person import PersonByTokenResponse
 from app.template_manager import TemplateManager
 from jinja2 import TemplateNotFound
-from app.main import get_template_manager
+from app.dependencies import get_template_manager
 
 router = APIRouter()
 

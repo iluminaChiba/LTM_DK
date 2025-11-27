@@ -11,6 +11,7 @@ class Meal(Base):
     name = Column(String(255), nullable=False)
 
     category = Column(String(100), nullable=True)
+    vendor_item_id = Column(String(20), nullable=False, index=True)
     initial_stock = Column(Integer, nullable=True)
 
     ext1 = Column(String(255), nullable=True)

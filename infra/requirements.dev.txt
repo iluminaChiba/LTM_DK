@@ -7,3 +7,7 @@ pydantic
 pymysql
 python-dotenv
 cryptography
+jinja2
+pandas
+python-multipart
+openpyxl

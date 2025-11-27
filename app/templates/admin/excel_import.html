@@ -36,7 +36,7 @@ async function runPreview() {
     const formData = new FormData();
     formData.append("file", fileInput.files[0]);
 
-    const res = await fetch("/preview/preview", {
+    const res = await fetch("/api/preview/preview", {
         method: "POST",
         body: formData
     });
@@ -61,7 +61,7 @@ async function runPreview() {
 async function runCommit() {
     if (!previewData) return;
 
-    const res = await fetch("/commit/commit", {
+    const res = await fetch("/api/commit/commit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(previewData)
