@@ -24,7 +24,7 @@ CREATE TABLE meals (
   id INT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(255) NOT NULL,
   category VARCHAR(100) DEFAULT NULL,
-  vendor_item_id VARCHAR(20) DEFAULT NULL,
+  vendor_item_id INT NOT NULL UNIQUE,
   -- 朝時点の在庫数
   initial_stock INT DEFAULT NULL,
   ext1 VARCHAR(255) DEFAULT NULL,

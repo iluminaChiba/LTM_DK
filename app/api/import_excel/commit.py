@@ -75,21 +75,21 @@ def commit_import(payload: ImportPayload,
 
     # vendor_item_id → meal.id への逆引き
     meal_map = {
-        str(m.vendor_item_id): m.id
+        m.vendor_item_id: m.id
         for m in db.query(Meal).filter(
-            Meal.vendor_item_id.in_([str(v) for v in payload.weekly_menu_items])
+            Meal.vendor_item_id.in_(payload.weekly_menu_items)
         )
     }
 
     for vendor_id in payload.weekly_menu_items:
-        vendor_id_str = str(vendor_id)
-        if vendor_id_str not in meal_map:
+        if vendor_id not in meal_map:
             raise HTTPException(status_code=400,
-                                detail=f"vendor_item_id {vendor_id_str} が meals に見つかりません。")
+                                detail=f"vendor_item_id {vendor_id } が meals に見つかりません。")
 
         wm = WeeklyMenu(
-            date=week_start,        # ← 日別処理は不要のため start_date で統一
-            meal_id=meal_map[vendor_id_str]
+            start_date = payload.week.start_date,
+            end_date   = payload.week.end_date,
+            meal_id=meal_map[vendor_id]
         )
         db.add(wm)
         inserted_weekly += 1
