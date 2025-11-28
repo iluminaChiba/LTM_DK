@@ -9,8 +9,7 @@ class WeeklyMenu(Base):
     __tablename__ = "weekly_menus"
 
     id = Column(Integer, primary_key=True, index=True)
-    start_date = Column(Date, nullable=False)
-    end_date = Column(Date, nullable=False)
+    week_start = Column(Date, nullable=False)
 
     meal_id = Column(Integer, ForeignKey("meals.id"), nullable=False)
     meal = relationship("Meal")
