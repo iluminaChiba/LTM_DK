@@ -9,7 +9,7 @@ from pydantic import BaseModel
 # ============================================================
 class PersonBase(BaseModel):
     person_name: str
-    furigana: Optional[str] = None
+    furigana: str
     fee_category: Literal['visitor', 'trainee', 'normal'] = 'normal'
     is_present: bool = False
     ext1: Optional[str] = None
@@ -44,7 +44,7 @@ class PersonUpdate(BaseModel):
 class Person(BaseModel):
     id: int
     person_name: str
-    furigana: Optional[str] = None
+    furigana: str
     fee_category: str   #  出力は文字列じゃないとエラーになります。
     is_present: bool
     ext1: Optional[str] = None
@@ -65,7 +65,7 @@ class PersonByTokenResponse(BaseModel):
     """トークンから取得した人物情報（UI表示用）"""
     id: int
     person_name: str
-    furigana: Optional[str] = None
+    furigana: str
     fee_category: str
     is_present: bool
     token: str

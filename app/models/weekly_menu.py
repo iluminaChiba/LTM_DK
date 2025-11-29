@@ -11,7 +11,7 @@ class WeeklyMenu(Base):
     id = Column(Integer, primary_key=True, index=True)
     week_start = Column(Date, nullable=False)
 
-    meal_id = Column(Integer, ForeignKey("meals.id"), nullable=False)
+    meal_id = Column(Integer, ForeignKey("meals.meal_id"), nullable=False)
     meal = relationship("Meal")
 
     ext1 = Column(String(255), nullable=True)

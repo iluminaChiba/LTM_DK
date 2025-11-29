@@ -9,7 +9,7 @@ class Supply(Base):
 
     id = Column(Integer, primary_key=True, index=True)
 
-    meal_id = Column(Integer, ForeignKey("meals.id"), nullable=False)
+    meal_id = Column(Integer, ForeignKey("meals.meal_id"), nullable=False)
     quantity = Column(Integer, nullable=False)
     supplied_at = Column(Date, nullable=False)
 

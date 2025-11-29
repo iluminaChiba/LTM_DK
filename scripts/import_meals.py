@@ -1,12 +1,21 @@
 import json
+import sys
+from pathlib import Path
+
+# プロジェクトルートをPythonパスに追加
+BASE_DIR = Path(__file__).resolve().parent.parent  # プロジェクトルート
+sys.path.insert(0, str(BASE_DIR))
+
 from app.core.database import SessionLocal
 from app.models.meal import Meal
+
+JSON_PATH = BASE_DIR / "app" / "resources" / "monthly_menu.json"
 
 def import_meals():
     db = SessionLocal()
     
     try:
-        with open("monthly_menu.json", "r", encoding="utf-8") as f:
+        with open(JSON_PATH, "r", encoding="utf-8") as f:
             meals = json.load(f)
 
         for item in meals:

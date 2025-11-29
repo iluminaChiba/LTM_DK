@@ -10,7 +10,7 @@ class MealLog(Base):
     id = Column(Integer, primary_key=True, index=True)
 
     person_id = Column(Integer, ForeignKey("persons.id"), nullable=False)
-    meal_id = Column(Integer, ForeignKey("meals.id"), nullable=False)
+    meal_id = Column(Integer, ForeignKey("meals.meal_id"), nullable=False)
     log_day = Column(Date, nullable=False)
 
     ext1 = Column(String(255), nullable=True)
