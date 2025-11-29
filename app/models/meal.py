@@ -1,19 +1,29 @@
 # app/models/meal.py
-from sqlalchemy import Column, Integer, String, Boolean, DateTime
+from sqlalchemy import Column, Integer, String, Boolean, DateTime, DECIMAL
 from sqlalchemy.sql import func
-from app.database import Base
+from app.core.database import Base
 
 
 class Meal(Base):
     __tablename__ = "meals"
 
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String(255), nullable=False)
-
-    category = Column(String(100), nullable=True)
-    vendor_item_id = Column(Integer, nullable=False, index=True)
-    initial_stock = Column(Integer, nullable=True)
-
+    meal_id = Column(Integer, primary_key=True)
+    meal_name = Column(String(255), nullable=False)
+    furigana = Column(String(255), nullable=False, index=True)
+    
+    # 副菜情報
+    side1 = Column(String(255), nullable=True)
+    side2 = Column(String(255), nullable=True)
+    side3 = Column(String(255), nullable=True)
+    
+    # 栄養成分
+    kcal = Column(DECIMAL(6, 1), nullable=True)
+    protein = Column(DECIMAL(6, 1), nullable=True)
+    fat = Column(DECIMAL(6, 1), nullable=True)
+    carb = Column(DECIMAL(6, 1), nullable=True)
+    salt = Column(DECIMAL(6, 2), nullable=True)
+    
+    # 拡張フィールド
     ext1 = Column(String(255), nullable=True)
     ext2 = Column(String(255), nullable=True)
 

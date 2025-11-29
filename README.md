@@ -21,9 +21,11 @@ LTM_DK/
 │ ├─ api/
 │ ├─ crud/
 │ ├─ models/
+│ ├─ resources/
 │ ├─ schemas/
 │ ├─ template_manager/
 │ ├─ templates/
+│ ├─ utils/
 │ ├─ database.py
 │ └─ main.py
 ├─ infra/

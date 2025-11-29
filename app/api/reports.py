@@ -3,7 +3,7 @@ import csv
 from fastapi import APIRouter, Depends, Response
 from sqlalchemy.orm import Session
 from datetime import date
-from app.database import get_db
+from app.core.database import get_db
 from app.crud import reports as crud_reports
 
 router = APIRouter()

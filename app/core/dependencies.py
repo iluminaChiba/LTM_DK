@@ -1,4 +1,8 @@
-# app/dependencies.py
+# app/core/dependencies.py
+"""
+core/dependencies.py
+FastAPI の依存注入（Depends 用関数）を提供します。
+"""
 from app.template_manager import TemplateManager
 
 

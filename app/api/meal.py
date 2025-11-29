@@ -1,9 +1,10 @@
 # app/api/meal.py
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
+from typing import Optional
 
-from app.database import get_db
+from app.core.database import get_db
 from app import schemas
 from app.crud import meal as crud_meal
 
@@ -13,8 +14,15 @@ router = APIRouter()
 # ============================================================
 # Create
 # ============================================================
-@router.post("/", response_model=schemas.Meal)
+@router.post("/", response_model=schemas.Meal, status_code=201)
 def create_meal(meal_in: schemas.MealCreate, db: Session = Depends(get_db)):
+    # meal_idが既に存在する場合はエラー
+    existing = crud_meal.get_meal(db, meal_in.meal_id)
+    if existing:
+        raise HTTPException(
+            status_code=400, 
+            detail=f"Meal with meal_id {meal_in.meal_id} already exists"
+        )
     return crud_meal.create_meal(db, meal_in)
 
 
@@ -30,10 +38,15 @@ def read_meal(meal_id: int, db: Session = Depends(get_db)):
 
 
 # ============================================================
-# Read (all)
+# Read (all / search by furigana)
 # ============================================================
 @router.get("/", response_model=list[schemas.Meal])
-def read_meals(db: Session = Depends(get_db)):
+def read_meals(
+    furigana: Optional[str] = Query(None, description="ふりがなの前方一致検索"),
+    db: Session = Depends(get_db)
+):
+    if furigana:
+        return crud_meal.get_meals_by_furigana(db, furigana)
     return crud_meal.get_meals(db)
 
 

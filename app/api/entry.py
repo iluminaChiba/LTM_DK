@@ -1,11 +1,10 @@
 # app/api/entry.py
-
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from datetime import date
 from app import schemas
 from app.crud import meal_log as crud_meal_log
-from app.database import get_db
+from app.core.database import get_db
 from app import models
 
 router = APIRouter()

@@ -1,5 +1,8 @@
-# app/database.py
-
+# app/core/database.py
+"""
+core/database.py
+アプリケーションの根幹となる ＤＢセッション管理を提供します。
+"""
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 

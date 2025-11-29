@@ -1,7 +1,7 @@
 # app/models/person.py
 from sqlalchemy import Column, Integer, String, Boolean, DateTime, Enum
 from sqlalchemy.sql import func
-from app.database import Base
+from app.core.database import Base
 import enum
 
 
@@ -15,7 +15,8 @@ class Person(Base):
     __tablename__ = "persons"
 
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String(255), nullable=False)
+    person_name = Column(String(255), nullable=False)
+    furigana = Column(String(255), nullable=False)
 
     token = Column(String(64), unique=True, nullable=True)
 
@@ -24,6 +25,8 @@ class Person(Base):
         nullable=False,
         default=FeeCategory.normal,
     )
+    
+    is_present = Column(Boolean, nullable=False, default=False)
 
     ext1 = Column(String(255), nullable=True)
     ext2 = Column(String(255), nullable=True)

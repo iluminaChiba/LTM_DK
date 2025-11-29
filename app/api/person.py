@@ -3,7 +3,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from app.database import get_db
+from app.core.database import get_db
 from app import schemas
 from app.crud import person as crud_person
 
@@ -33,7 +33,9 @@ def read_person(person_id: int, db: Session = Depends(get_db)):
 # Read (all)
 # ============================================================
 @router.get("/", response_model=list[schemas.Person])
-def read_people(db: Session = Depends(get_db)):
+def read_people(furigana: str | None = None, db: Session = Depends(get_db)):
+    if furigana:
+        return crud_person.get_people_by_furigana(db, furigana)
     return crud_person.get_people(db)
 
 

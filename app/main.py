@@ -1,10 +1,9 @@
 # app/main.py
-
 from fastapi import FastAPI, Depends
 from sqlalchemy.orm import Session
 from sqlalchemy import text
 
-from app.database import get_db
+from app.core.database import get_db
 from app.api.router import api_router
 from fastapi.staticfiles import StaticFiles
 

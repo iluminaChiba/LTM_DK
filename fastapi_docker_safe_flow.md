@@ -97,3 +97,19 @@ netsh interface portproxy add v4tov4 `
 
 cmd で以下のコマンドで確認
 netstat -ano | findstr :8000
+
+
+
+  {
+    "meal_id": 26,
+    "meal_name": "",
+    "furigana": "",
+    "side1": "",
+    "side2": "",
+    "side3": "",
+    "kcal": ,
+    "protein": ,
+    "fat": ,
+    "carb": ,
+    "salt": 
+  },

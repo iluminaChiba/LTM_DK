@@ -2,7 +2,7 @@
 
 from sqlalchemy import Column, Integer, Date, ForeignKey, String, DateTime
 from sqlalchemy.orm import relationship
-from app.database import Base
+from app.core.database import Base
 from datetime import datetime
 
 class WeeklyMenu(Base):

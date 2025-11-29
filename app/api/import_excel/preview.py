@@ -49,7 +49,7 @@ async def preview_excel(file: UploadFile = File(...)):
         # ---------------------------------------------------------
         # 1) 週開始日（I1）を取得
         # ---------------------------------------------------------
-        raw_date = ws["I1"].value
+        raw_date = ws.cell(row=1, column=9).value  # I列 = 9列目
         if isinstance(raw_date, str):
             week_start = datetime.strptime(raw_date.strip(), "%Y年%m月%d日").date()
         elif isinstance(raw_date, datetime):
@@ -94,13 +94,13 @@ async def preview_excel(file: UploadFile = File(...)):
             )
 
         # 列位置で商品コード・商品名を決め打ち
-        code_col = df_raw.columns[1]  # B列
-        name_col = df_raw.columns[2]  # C列（健康管理食選択型）
+        meal_id_col = str(df_raw.columns[1])  # B列
+        meal_name_col = str(df_raw.columns[2])  # C列（健康管理食選択型）
 
         df = df_raw.copy()
         df = df.rename(columns={
-            code_col: "商品コード",
-            name_col: "商品名",
+            meal_id_col: "メニューID",
+            meal_name_col: "メニュー名",
         })
 
         # ---------------------------------------------------------
@@ -109,17 +109,17 @@ async def preview_excel(file: UploadFile = File(...)):
         # ---------------------------------------------------------
         excel_info = {}
         for row in range(1, ws.max_row + 1):
-            code_cell = ws.cell(row=row, column=2)  # B列: コード
-            name_cell = ws.cell(row=row, column=3)  # C列: 商品名
+            meal_id_cell = ws.cell(row=row, column=2)  # B列: メニューID
+            meal_name_cell = ws.cell(row=row, column=3)  # C列: メニュー名
 
             excel_info[row] = {
-                "code": code_cell.value,
-                "name": name_cell.value,
+                "meal_id": meal_id_cell.value,
+                "meal_name": meal_name_cell.value,
                 "height": ws.row_dimensions[row].height,
                 "hidden": ws.row_dimensions[row].hidden,
                 "invisible": (ws.row_dimensions[row].height == 0),
-                "border_code": has_border(code_cell),
-                "border_name": has_border(name_cell),
+                "border_code": has_border(meal_id_cell),
+                "border_name": has_border(meal_name_cell),
             }
 
         # ---------------------------------------------------------
@@ -127,12 +127,12 @@ async def preview_excel(file: UploadFile = File(...)):
         # ---------------------------------------------------------
         excel_rows = []
         for j in range(len(df)):
-            code = df.iloc[j]["商品コード"]
+            meal_id = df.iloc[j]["メニューID"]
             row_found = None
 
-            if not is_effectively_blank(code):
+            if not is_effectively_blank(meal_id):
                 for r, info in excel_info.items():
-                    if str(info["code"]) == str(code):
+                    if str(info["meal_id"]) == str(meal_id):
                         row_found = r
                         break
 
@@ -145,24 +145,24 @@ async def preview_excel(file: UploadFile = File(...)):
 
         for i in range(len(df)):
             erow = df.iloc[i]["excel_row"]
-            code = df.iloc[i]["商品コード"]
-            name = df.iloc[i]["商品名"]
+            meal_id = df.iloc[i]["メニューID"]
+            meal_name = df.iloc[i]["メニュー名"]
 
-            # ★ NaN 対策（ここでスキップ）
-            if pd.isna(erow):
+            # ★ Excel行番号が見つからなかった行はスキップ
+            if not isinstance(erow, int):
                 continue
 
             # --- デバッグ出力 ------------------------
             info = excel_info.get(erow, {})
-            name_cell = ws.cell(row=erow, column=3) if erow else None
+            name_cell = ws.cell(row=erow, column=3)
 
             safe_hex = (
-                " ".join(f"{ord(ch):04x}" for ch in str(name))
-                if isinstance(name, str) else "None"
+                " ".join(f"{ord(ch):04x}" for ch in str(meal_name))
+                if isinstance(meal_name, str) else "None"
             )
 
-            print(f"[CHECK] excel_row={erow}, code={code}, "
-                f"name='{name}', HEX={safe_hex}, "
+            print(f"[CHECK] excel_row={erow}, meal_id={meal_id}, "
+                f"meal_name='{meal_name}', HEX={safe_hex}, "
                 f"font_color={getattr(name_cell.font, 'color', None) if name_cell else None}, "
                 f"border={info.get('border_name') if info else None}, "
                 f"hidden={info.get('hidden') if info else None}, "
@@ -182,7 +182,7 @@ async def preview_excel(file: UploadFile = File(...)):
         # ---------------------------------------------------------
         def is_valid_row(idx: int) -> bool:
             erow = df.iloc[idx]["excel_row"]
-            name = df.iloc[idx]["商品名"]
+            meal_name = df.iloc[idx]["メニュー名"]
 
             if erow is None:
                 return False
@@ -192,7 +192,7 @@ async def preview_excel(file: UploadFile = File(...)):
             if info.get("hidden") or info.get("invisible"):
                 return False
 
-            if is_effectively_blank(name):
+            if is_effectively_blank(meal_name):
                 return False
 
             if not info.get("border_name"):
@@ -206,24 +206,18 @@ async def preview_excel(file: UploadFile = File(...)):
         meals = []
         weekly_menu_preview = []
 
-
         for i in range(len(df)):
             if is_valid_row(i):
-                code = df.iloc[i]["商品コード"]
-                name = df.iloc[i]["商品名"]
+                meal_id = df.iloc[i]["メニューID"]
+                meal_name = df.iloc[i]["メニュー名"]
 
-                try:
-                    vid = int(str(code))
-                except ValueError:
-                    # 数値化できないコードはスキップ
-                    continue
 
 
                 meals.append({
-                    "vendor_item_id": vid,
-                    "name": name,
+                    "meal_id": meal_id,
+                    "meal_name": meal_name,
                 })
-                weekly_menu_preview.append(vid)
+                weekly_menu_preview.append(meal_id)
 
         return {
             "filename": file.filename,

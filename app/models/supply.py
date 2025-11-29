@@ -1,7 +1,7 @@
 # app/models/supply.py
 from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey, Date
 from sqlalchemy.sql import func
-from app.database import Base
+from app.core.database import Base
 
 
 class Supply(Base):

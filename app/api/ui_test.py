@@ -2,12 +2,12 @@
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import HTMLResponse
 from sqlalchemy.orm import Session
-from app.database import get_db
+from app.core.database import get_db
 from app.models.person import Person
 from app.schemas.person import PersonByTokenResponse
 from app.template_manager import TemplateManager
 from jinja2 import TemplateNotFound
-from app.dependencies import get_template_manager
+from app.core.dependencies import get_template_manager
 
 router = APIRouter()
 

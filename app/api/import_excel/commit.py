@@ -3,14 +3,14 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List, Dict, Any
 from datetime import date
-from app.database import get_db
+from app.core.database import get_db
 from app.models.meal import Meal
 from app.models.weekly_menu import WeeklyMenu
 
 router = APIRouter()
 
 class ImportMealItem(BaseModel):
-    vendor_item_id: int
+    meal_id: int
     name: str
 
 
@@ -21,7 +21,7 @@ class ImportWeek(BaseModel):
 class ImportPayload(BaseModel):
     week: ImportWeek
     meals: List[ImportMealItem]
-    weekly_menu_items: List[int]   # vendor_item_id のリスト
+    weekly_menu_items: List[int]   # meal_id のリスト
 
 
 @router.post("/commit")
@@ -39,60 +39,10 @@ def commit_import(payload: ImportPayload,
     inserted_weekly = 0
 
     # ---------------------------------------------------------
-    # Step 1: meals の upsert
+    # Step 1: meals の upsert ここは書き直し
     # ---------------------------------------------------------
-    for item in payload.meals:
-
-        # すでに vendor_item_id が存在するかチェック
-        existing = (
-            db.query(Meal)
-              .filter(Meal.vendor_item_id == item.vendor_item_id)
-              .first()
-        )
-
-        if existing:
-            # 商品名が変わっている場合だけ UPDATE
-            if existing.name != item.name:
-                existing.name = item.name
-                db.add(existing)
-                updated_meals += 1
-        else:
-            # 新規 CREATE
-            new_meal = Meal(
-                name=item.name,
-                vendor_item_id=item.vendor_item_id
-            )
-            db.add(new_meal)
-            inserted_meals += 1
-
-    db.commit()
-
-    # ---------------------------------------------------------
-    # Step 2: weekly_menus の登録（週単位）
-    # ---------------------------------------------------------
-    week_start = payload.week.week_start
-
-    # vendor_item_id → meal.id への逆引き
-    meal_map = {
-        m.vendor_item_id: m.id
-        for m in db.query(Meal).filter(
-            Meal.vendor_item_id.in_(payload.weekly_menu_items)
-        )
-    }
-
-    for vendor_id in payload.weekly_menu_items:
-        if vendor_id not in meal_map:
-            raise HTTPException(status_code=400,
-                                detail=f"vendor_item_id {vendor_id } が meals に見つかりません。")
-
-        wm = WeeklyMenu(
-            week_start = payload.week.week_start,
-            meal_id=meal_map[vendor_id]
-        )
-        db.add(wm)
-        inserted_weekly += 1
-
-    db.commit()
+  
+    
 
     # ---------------------------------------------------------
     # 結果を返す

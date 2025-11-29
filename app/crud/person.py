@@ -37,6 +37,20 @@ def get_people(db: Session):
     return (
         db.query(models.Person)
         .filter(models.Person.is_deleted == False)
+        .order_by(models.Person.furigana)
+        .all()
+    )
+
+
+def get_people_by_furigana(db: Session, furigana: str):
+    """ふりがなで部分一致検索"""
+    return (
+        db.query(models.Person)
+        .filter(
+            models.Person.is_deleted == False,
+            models.Person.furigana.contains(furigana)
+        )
+        .order_by(models.Person.furigana)
         .all()
     )
 

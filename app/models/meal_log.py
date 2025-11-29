@@ -1,7 +1,7 @@
 # app/models/meal_log.py
 from sqlalchemy import Column, Integer, String, Boolean, DateTime, Date, ForeignKey
 from sqlalchemy.sql import func
-from app.database import Base
+from app.core.database import Base
 
 
 class MealLog(Base):

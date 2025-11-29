@@ -8,8 +8,10 @@ from pydantic import BaseModel
 # Base
 # ============================================================
 class PersonBase(BaseModel):
-    name: str
+    person_name: str
+    furigana: Optional[str] = None
     fee_category: Literal['visitor', 'trainee', 'normal'] = 'normal'
+    is_present: bool = False
     ext1: Optional[str] = None
     ext2: Optional[str] = None
 
@@ -25,10 +27,12 @@ class PersonCreate(PersonBase):
 # Update（PATCH 用）
 # ============================================================
 class PersonUpdate(BaseModel):
-    name: Optional[str] = None
+    person_name: Optional[str] = None
+    furigana: Optional[str] = None
     fee_category: Optional[
         Literal['visitor', 'trainee', 'normal']
     ] = None
+    is_present: Optional[bool] = None
     ext1: Optional[str] = None
     ext2: Optional[str] = None
     is_deleted: Optional[bool] = None
@@ -39,8 +43,10 @@ class PersonUpdate(BaseModel):
 # ============================================================
 class Person(BaseModel):
     id: int
-    name: str
+    person_name: str
+    furigana: Optional[str] = None
     fee_category: str   #  出力は文字列じゃないとエラーになります。
+    is_present: bool
     ext1: Optional[str] = None
     ext2: Optional[str] = None
     token: Optional[str] = None
@@ -58,8 +64,10 @@ class Person(BaseModel):
 class PersonByTokenResponse(BaseModel):
     """トークンから取得した人物情報（UI表示用）"""
     id: int
-    name: str
+    person_name: str
+    furigana: Optional[str] = None
     fee_category: str
+    is_present: bool
     token: str
 
     class Config:
