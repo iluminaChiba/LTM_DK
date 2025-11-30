@@ -4,6 +4,7 @@ import math
 import openpyxl
 import pandas as pd
 from io import BytesIO
+from datetime import datetime, timedelta
 
 
 def safe_json_value(val):
@@ -134,25 +135,41 @@ async def parse_excel_order(file_content: bytes, filename: str) -> dict:
     except:
         rice_total = None
 
-    # 日付情報の取得（C1とD1セルから）
+    # 日付情報の取得（着日はI1）
     try:
-        arrival_date_val = df.iat[0, 2] if df.shape[1] > 2 else None  # C1
-        applicable_date_val = df.iat[0, 3] if df.shape[1] > 3 else None  # D1
+        arrival_date_val = df.iat[0, 8] if df.shape[1] > 8 else None  # I1
         
-        # pandas Timestamp を文字列に変換
         if pd.notna(arrival_date_val):
-            arrival_date = str(arrival_date_val)[:10] if hasattr(arrival_date_val, 'strftime') else str(arrival_date_val)
+            # pandas Timestamp を date に変換
+            if hasattr(arrival_date_val, 'date'):
+                # pandasのTimestamp型の場合
+                arrival_dt = arrival_date_val.date()
+            else:
+                # 文字列の場合（日本語形式: "2025年12月9日"）
+                import re
+                date_str = str(arrival_date_val)
+                match = re.match(r'(\d{4})年(\d{1,2})月(\d{1,2})日', date_str)
+                if match:
+                    year, month, day = match.groups()
+                    arrival_dt = datetime(int(year), int(month), int(day)).date()
+                else:
+                    # YYYY-MM-DD形式も試す
+                    arrival_dt = datetime.strptime(date_str[:10], '%Y-%m-%d').date()
+            
+            arrival_date = arrival_dt.isoformat()
+            # 着日 + 1日 = 適用日
+            applicable_date = (arrival_dt + timedelta(days=1)).isoformat()
         else:
             arrival_date = None
-            
-        if pd.notna(applicable_date_val):
-            applicable_date = str(applicable_date_val)[:10] if hasattr(applicable_date_val, 'strftime') else str(applicable_date_val)
-        else:
             applicable_date = None
-    except:
+            
+    except Exception as e:
+        print(f"日付取得エラー: {e}")
+        import traceback
+        traceback.print_exc()
         arrival_date = None
         applicable_date = None
-
+        
     return {
         "filename": filename,
         "arrival_date": arrival_date,
