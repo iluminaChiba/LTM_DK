@@ -79,6 +79,23 @@ CREATE TABLE allergies (
   PRIMARY KEY (meal_id),
   CONSTRAINT fk_allergies_meal FOREIGN KEY (meal_id) REFERENCES meals(meal_id) ON DELETE CASCADE
 );
+--- ============================================
+--  pending_box: 食パック発注の仮登録テーブル
+-- ============================================
+CREATE TABLE pending_box (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  meal_id VARCHAR(10) NOT NULL,
+  meal_name VARCHAR(255) NULL,
+  qty INT UNSIGNED NOT NULL,
+  arrival_date DATE NOT NULL,
+  applicable_date DATE NOT NULL,
+  source_filename VARCHAR(255) NULL,
+  excel_row INT UNSIGNED NOT NULL,
+  status ENUM('pending', 'applied') NOT NULL DEFAULT 'pending',
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  INDEX idx_pending_meal_id (meal_id)
+);
 -- ============================================
 --  supplies: 入庫履歴（将来拡張用）
 -- ============================================

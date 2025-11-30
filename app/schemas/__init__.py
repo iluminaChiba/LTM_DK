@@ -28,3 +28,9 @@ from .allergy import (
     AllergyCreate,
     AllergyUpdate,
 )
+
+from .pending_box import (
+    PendingBox,
+    PendingBoxCreate,
+    PendingBoxUpdate,
+)

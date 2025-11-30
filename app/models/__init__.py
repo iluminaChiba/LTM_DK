@@ -4,3 +4,4 @@ from .meal import Meal
 from .supply import Supply
 from .meal_log import MealLog
 from .allergy import Allergy
+from .pending_box import PendingBox

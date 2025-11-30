@@ -1,77 +1,33 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
+
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Excel 取り込み（テストUI）</title>
+    <link rel="stylesheet" href="/api/admin/css/excel_import.css">
 </head>
+
 <body>
 
-<h2>Excel取り込みテスト（事務用）</h2>
+    <h2>Excel取り込みテスト（事務用）</h2>
 
-<!-- ファイル選択 -->
-<input type="file" id="excelFile" />
+    <!-- ファイル選択 -->
+    <label for="excelFile">Excelファイルを選択:</label>
+    <input type="file" id="excelFile" />
 
-<!-- プレビュー実行ボタン -->
-<button onclick="runPreview()">プレビュー</button>
+    <!-- プレビュー実行ボタン -->
+    <button id="run-preview">プレビュー</button>
 
-<!-- 本登録ボタン（プレビュー後に有効） -->
-<button id="commitBtn" onclick="runCommit()" disabled>本登録する</button>
+    <!-- 注文画面に遷移するボタン（プレビュー後に有効） -->
+    <button id="go-register">注文画面へ</button>
 
-<hr>
+    <hr>
 
-<h3>プレビュー結果</h3>
-<pre id="previewArea">(ここに結果が出ます)</pre>
+    <h3>プレビュー結果</h3>
+    <pre id="previewArea">(ここに結果が出ます)</pre>
 
-<script>
-let previewData = null;
-
-// Preview API call
-async function runPreview() {
-    const fileInput = document.getElementById("excelFile");
-    if (!fileInput.files.length) {
-        alert("ファイルを選んでください");
-        return;
-    }
-
-    const formData = new FormData();
-    formData.append("file", fileInput.files[0]);
-
-    const res = await fetch("/api/preview/preview", {
-        method: "POST",
-        body: formData
-    });
-
-    if (!res.ok) {
-        document.getElementById("previewArea").textContent =
-            "エラー: " + res.status + " " + (await res.text());
-        return;
-    }
-
-    previewData = await res.json();
-
-    // 画面表示
-    document.getElementById("previewArea").textContent =
-        JSON.stringify(previewData, null, 2);
-
-    // 本登録ボタンを有効化
-    document.getElementById("commitBtn").disabled = false;
-}
-
-// Commit API call
-async function runCommit() {
-    if (!previewData) return;
-
-    const res = await fetch("/api/commit/commit", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(previewData)
-    });
-
-    const result = await res.json();
-
-    alert("取り込み完了:\n" + JSON.stringify(result, null, 2));
-}
-</script>
-
+    <script src="/api/admin/js/excel_import.js"></script>
 </body>
+
 </html>
