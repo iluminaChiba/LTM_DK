@@ -22,3 +22,9 @@ from .meal_log import (
     MealLogCreate,
     MealLogUpdate,
 )
+
+from .allergy import (
+    Allergy,
+    AllergyCreate,
+    AllergyUpdate,
+)

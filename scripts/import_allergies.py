@@ -7,7 +7,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent  # プロジェクトルート
 sys.path.insert(0, str(BASE_DIR))
 
 from app.core.database import SessionLocal
-from app.models.allergy import Allergy  # ← モデル名はあなたの実装に合わせて調整
+from app.models.allergy import Allergy
+from app.models.meal import Meal
 
 CSV_PATH = BASE_DIR / "app" / "resources" / "allergies" / "allergy_raw_2025_12.csv"
 
@@ -50,16 +51,23 @@ def import_allergies():
                     skip_count += 1
                     continue
 
-                # 3〜30列目がアレルギー（28個）
-                raw = row[2:30]
-                data = [1 if cell.strip() == "●" else 0 for cell in raw]
+                # mealsテーブルに存在するか確認（外部キー制約対策）
+                meal_exists = db.query(Meal).filter(Meal.meal_id == meal_id).first()
+                if not meal_exists:
+                    print(f"⚠️ meal_id={meal_id} はmealsテーブルに存在しないためスキップ")
+                    skip_count += 1
+                    continue
 
                 # 既存データがあればスキップ（重複防止）
                 existing = db.query(Allergy).filter(Allergy.meal_id == meal_id).first()
                 if existing:
-                    print(f"⚠️ meal_id={meal_id} は既に存在するためスキップ")
+                    print(f"⚠️ meal_id={meal_id} のアレルギー情報は既に存在するためスキップ")
                     skip_count += 1
                     continue
+
+                # 3〜30列目がアレルギー（28個）
+                raw = row[2:30]
+                data = [1 if cell.strip() == "●" else 0 for cell in raw]
 
                 allergy = Allergy(
                     meal_id=meal_id,

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>食パック発注登録</title>
+  <link rel="stylesheet" href="/api/admin/css/meal_order_register.css">
+
+</head>
+
+<body>
+
+  <h1>食パック発注登録（meal_order_register）</h1>
+  <p>ファイル名：{{ preview.filename }}</p>
+  <p>抽出件数：{{ preview.result_rows_count }} 件</p>
+
+  <table id="order-table">
+    <thead>
+      <tr>
+        <th>行</th>
+        <th>Meal ID</th>
+        <th>名前</th>
+        <th>数量</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in preview.meals %}
+      <tr>
+        <td>{{ row.excel_row }}</td>
+        <td>{{ row.meal_id }}</td>
+        <td>{{ row.meal_name or '' }}</td>
+        <td>
+          <label for="qty-{{ row.meal_id }}" class="visually-hidden">{{ row.meal_name or 'メニュー' }}の数量</label>
+          <input type="number" id="qty-{{ row.meal_id }}" class="qty-input" data-meal-id="{{ row.meal_id }}"
+            value="{{ row.qty if row.qty is not none else '' }}">
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <button id="submit-btn">登録（confirm）</button>
+
+  <script src="/api/admin/js/meal_order_register.js"></script>
+
+</body>
+
+</html>

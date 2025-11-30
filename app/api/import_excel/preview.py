@@ -1,233 +1,168 @@
 from fastapi import APIRouter, UploadFile, File, HTTPException
-from datetime import datetime
-import pandas as pd
-import openpyxl
 from io import BytesIO
+from datetime import datetime
+import math
+
+import openpyxl
+import pandas as pd
 
 router = APIRouter()
 
 
-def has_border(cell):
+def safe_json_value(val):
+    """JSON変換できない値（NaN, Inf）をNoneに変換"""
+    if isinstance(val, float):
+        if math.isnan(val) or math.isinf(val):
+            return None
+    return val
+
+
+def has_border(cell) -> bool:
     """セルに上下左右どれかの罫線があるかどうか"""
     b = cell.border
+    if b is None:
+        return False
     return any([
-        b.top.style,
-        b.bottom.style,
-        b.left.style,
-        b.right.style,
+        b.top and b.top.style,
+        b.bottom and b.bottom.style,
+        b.left and b.left.style,
+        b.right and b.right.style,
     ])
 
 
-def is_effectively_blank(value):
-    """Excel の '見た目が空' を正しく検出する強化版"""
-    if value is None:
+def is_blank_like(val) -> bool:
+    """pandasが読んだ値が「実質空白」かどうか"""
+    if val is None:
         return True
-
-    if isinstance(value, float) and pd.isna(value):
+    if pd.isna(val):
         return True
-
-    if isinstance(value, str):
-        cleaned = (
-            value.replace("\u3000", "")   # 全角空白（Mac/Win共通）
-                 .replace("\xa0", "")    # NBSP（主にMacやWeb系）
-                 .replace("\n", "")
-                 .replace("\r", "")
-                 .strip()
-        )
-        return cleaned == ""
-
+    if isinstance(val, str) and val.strip() == "":
+        return True
     return False
 
 
 @router.post("/preview")
-async def preview_excel(file: UploadFile = File(...)):
+async def preview(file: UploadFile = File(...)):
     try:
         content = await file.read()
-        wb = openpyxl.load_workbook(BytesIO(content), data_only=True)
+
+        # ============================================
+        # STEP0: まず Excel の範囲を決める（6〜63）
+        # ============================================
+        START_ROW = 6
+        END_ROW = 63
+
+        # openpyxl(data_only=False) — 罫線や hidden を見る用
+        wb = openpyxl.load_workbook(BytesIO(content), data_only=False)
         ws = wb.active
 
-        # ---------------------------------------------------------
-        # 1) 週開始日（I1）を取得
-        # ---------------------------------------------------------
-        raw_date = ws.cell(row=1, column=9).value  # I列 = 9列目
-        if isinstance(raw_date, str):
-            week_start = datetime.strptime(raw_date.strip(), "%Y年%m月%d日").date()
-        elif isinstance(raw_date, datetime):
-            week_start = raw_date.date()
-        else:
-            raise HTTPException(
-                status_code=400,
-                detail="Excel解析エラー：着日セル(I1)から日付が読み取れません。",
-            )
+        # pandas(data_only=True 相当) — 実体値を見る用
+        df = pd.read_excel(BytesIO(content), engine="openpyxl", sheet_name=0, header=None)
 
-        # ---------------------------------------------------------
-        # 2) C列に「健康管理食選択型」がある行をヘッダ行とみなす
-        #    （= 商品名カラムのヘッダ）
-        # ---------------------------------------------------------
-        header_excel_row = None
-        for row in range(1, ws.max_row + 1):
-            val = ws.cell(row=row, column=3).value  # C列
-            if isinstance(val, str) and "健康管理食選択型" in val:
-                header_excel_row = row
-                break
+        # ============================================
+        # STEP1: C列（3列目）の罫線で候補を絞る
+        # ============================================
+        def has_border(cell) -> bool:
+            b = cell.border
+            if not b:
+                return False
+            return any([
+                b.top and b.top.style,
+                b.bottom and b.bottom.style,
+                b.left and b.left.style,
+                b.right and b.right.style,
+            ])
 
-        if header_excel_row is None:
-            raise HTTPException(
-                status_code=400,
-                detail="Excel解析エラー：C列に「健康管理食選択型」を持つヘッダ行が見つかりません。",
-            )
+        candidate_rows = []
+        for r in range(START_ROW, END_ROW + 1):
+            if has_border(ws.cell(row=r, column=3)):
+                candidate_rows.append(r)
 
-        # pandas の header は 0-based 行番号なので -1
-        pandas_header_idx = header_excel_row - 1
+        # ============================================
+        # STEP2: pandas(data_only=True) で名前が空白でない行だけ残す
+        # ============================================
+        def is_blank_like(v) -> bool:
+            if v is None:
+                return True
+            try:
+                if pd.isna(v):
+                    return True
+            except Exception:
+                pass
 
-        # ---------------------------------------------------------
-        # 3) pandas でヘッダ付きとして読み込み
-        #    A列: 謎の数字, B列: コード, C列: 健康管理食選択型(=商品名)
-        # ---------------------------------------------------------
-        df_raw = pd.read_excel(BytesIO(content), header=pandas_header_idx, dtype=str)
+            if isinstance(v, (int, float)):
+                return False
 
-        # 少なくとも B,C 列までは存在してほしい
-        if len(df_raw.columns) < 3:
-            raise HTTPException(
-                status_code=400,
-                detail="Excel解析エラー：列数が不足しています。（少なくとも3列必要）",
-            )
+            if isinstance(v, str):
+                cleaned = (
+                    v.replace("\u3000", "")
+                     .replace("\xa0", "")
+                     .replace("\n", "")
+                     .replace("\r", "")
+                     .strip()
+                )
+                return cleaned == ""
+            return False
 
-        # 列位置で商品コード・商品名を決め打ち
-        meal_id_col = str(df_raw.columns[1])  # B列
-        meal_name_col = str(df_raw.columns[2])  # C列（健康管理食選択型）
-
-        df = df_raw.copy()
-        df = df.rename(columns={
-            meal_id_col: "メニューID",
-            meal_name_col: "メニュー名",
-        })
-
-        # ---------------------------------------------------------
-        # 4) openpyxl 側で行情報を収集
-        #    コードは B列, 名称は C列 から取得
-        # ---------------------------------------------------------
-        excel_info = {}
-        for row in range(1, ws.max_row + 1):
-            meal_id_cell = ws.cell(row=row, column=2)  # B列: メニューID
-            meal_name_cell = ws.cell(row=row, column=3)  # C列: メニュー名
-
-            excel_info[row] = {
-                "meal_id": meal_id_cell.value,
-                "meal_name": meal_name_cell.value,
-                "height": ws.row_dimensions[row].height,
-                "hidden": ws.row_dimensions[row].hidden,
-                "invisible": (ws.row_dimensions[row].height == 0),
-                "border_code": has_border(meal_id_cell),
-                "border_name": has_border(meal_name_cell),
-            }
-
-        # ---------------------------------------------------------
-        # 5) df の各行に対応する Excel の行番号(excel_row)を紐づける
-        # ---------------------------------------------------------
-        excel_rows = []
-        for j in range(len(df)):
-            meal_id = df.iloc[j]["メニューID"]
-            row_found = None
-
-            if not is_effectively_blank(meal_id):
-                for r, info in excel_info.items():
-                    if str(info["meal_id"]) == str(meal_id):
-                        row_found = r
-                        break
-
-            excel_rows.append(row_found)
-
-        df["excel_row"] = excel_rows
-
-
-
-
-        for i in range(len(df)):
-            erow = df.iloc[i]["excel_row"]
-            meal_id = df.iloc[i]["メニューID"]
-            meal_name = df.iloc[i]["メニュー名"]
-
-            # ★ Excel行番号が見つからなかった行はスキップ
-            if not isinstance(erow, int):
+        rows_after_step2 = []
+        for r in candidate_rows:
+            idx = r - 1
+            if idx < 0 or idx >= len(df):
                 continue
 
-            # --- デバッグ出力 ------------------------
-            info = excel_info.get(erow, {})
-            name_cell = ws.cell(row=erow, column=3)
+            # --- STEP2 で NaN をすべて None に正規化する ---
+            raw_meal_id  = df.iat[idx, 1] if df.shape[1] > 1 else None
+            raw_meal_name = df.iat[idx, 2] if df.shape[1] > 2 else None
+            raw_qty       = df.iat[idx, 3] if df.shape[1] > 3 else None
 
-            safe_hex = (
-                " ".join(f"{ord(ch):04x}" for ch in str(meal_name))
-                if isinstance(meal_name, str) else "None"
-            )
+            meal_id = safe_json_value(raw_meal_id)
+            meal_name = safe_json_value(raw_meal_name)
+            qty = safe_json_value(raw_qty)
 
-            print(f"[CHECK] excel_row={erow}, meal_id={meal_id}, "
-                f"meal_name='{meal_name}', HEX={safe_hex}, "
-                f"font_color={getattr(name_cell.font, 'color', None) if name_cell else None}, "
-                f"border={info.get('border_name') if info else None}, "
-                f"hidden={info.get('hidden') if info else None}, "
-                f"invisible={info.get('invisible') if info else None}")
-            # ------------------------------------------
+            # 名前が実質空行は除外（STEP2）
+            if is_blank_like(meal_name):
+                continue
 
+            rows_after_step2.append((r, meal_id, meal_name, qty))
 
+        # ============================================
+        # STEP3: hidden=true の行は除外（あなたの観測に基づく）
+        # ============================================
+        final_rows = []
+        for (r, meal_id, meal_name, qty) in rows_after_step2:
+            row_dim = ws.row_dimensions[r]
+            if bool(row_dim.hidden):   # hidden=True → 除外
+                continue
 
+            # STEP2 で safe_json_value 済なのでここはそのまま入れて良い
+            final_rows.append({
+                "excel_row": r,
+                "meal_id": meal_id,
+                "meal_name": meal_name,
+                "qty": qty,
+            })
 
-
-        # ---------------------------------------------------------
-        # 6) データ行フィルタ
-        #    - excel_row が取れている
-        #    - 行が非表示/高さ0 ではない
-        #    - 商品名が空でない
-        #    - 商品名セルに罫線がある（=本物の行）
-        # ---------------------------------------------------------
-        def is_valid_row(idx: int) -> bool:
-            erow = df.iloc[idx]["excel_row"]
-            meal_name = df.iloc[idx]["メニュー名"]
-
-            if erow is None:
-                return False
-
-            info = excel_info.get(erow, {})
-
-            if info.get("hidden") or info.get("invisible"):
-                return False
-
-            if is_effectively_blank(meal_name):
-                return False
-
-            if not info.get("border_name"):
-                return False
-
-            return True
-
-        # ---------------------------------------------------------
-        # 7) 抽出
-        # ---------------------------------------------------------
-        meals = []
-        weekly_menu_preview = []
-
-        for i in range(len(df)):
-            if is_valid_row(i):
-                meal_id = df.iloc[i]["メニューID"]
-                meal_name = df.iloc[i]["メニュー名"]
-
-
-
-                meals.append({
-                    "meal_id": meal_id,
-                    "meal_name": meal_name,
-                })
-                weekly_menu_preview.append(meal_id)
+        # ============================================
+        # rice（お米パック）の取得（既存処理のまま）
+        # ここはあなたの過去のコードに合わせておきます
+        # ============================================
+        try:
+            rice_val = df.iat[6, 17] if df.shape[1] > 17 else None
+            rice_total = int(rice_val) if not pd.isna(rice_val) else None
+        except:
+            rice_total = None
 
         return {
             "filename": file.filename,
-            "week": {"week_start": week_start.isoformat()},
-            "meals": meals,
-            "weekly_menu_preview": weekly_menu_preview,
+            "rows_range": [START_ROW, END_ROW],
+            "candidate_rows_count": len(candidate_rows),
+            "after_step2_count": len(rows_after_step2),
+            "result_rows_count": len(final_rows),
+            "rice": {
+                "total": safe_json_value(rice_total),
+            },
+            "meals": final_rows,
         }
 
-    except HTTPException:
-        # そのまま投げ直し
-        raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Excel解析エラー: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"preview処理エラー: {str(e)}")

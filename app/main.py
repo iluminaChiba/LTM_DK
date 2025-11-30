@@ -16,6 +16,12 @@ app.include_router(api_router, prefix="/api")
 app.mount("/statics", StaticFiles(directory="app/api/statics"), name="statics")
 # END DEBUG
 
+# 管理画面用の静的ファイル
+app.mount("/api/admin/css", StaticFiles(directory="app/templates/admin/css"), name="admin-css")
+app.mount("/api/admin/js", StaticFiles(directory="app/templates/admin/js"), name="admin-js")
+
+
+
 # # データベース接続テスト（同期版）
 # @app.get("/")
 # def db_test(db: Session = Depends(get_db)):

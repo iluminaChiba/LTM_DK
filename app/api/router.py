@@ -1,7 +1,7 @@
 # app/api/router.py
 
 from fastapi import APIRouter, Depends, Request
-from app.api import person, meal, meal_log, supply, reports, entry, ui_test, import_excel, ui_allergy, allergy
+from app.api import person, meal, meal_log, supply, reports, entry, ui_test, import_excel, ui_allergy, allergy, order_register, ui_meal_order_register
 from app.core.dependencies import get_template_manager
 from fastapi.responses import HTMLResponse
 from app.template_manager import TemplateManager
@@ -19,6 +19,8 @@ api_router.include_router(entry.router, prefix="/entry", tags=["Entry"])
 api_router.include_router(import_excel.preview_router, prefix="/preview", tags=["Preview"])
 api_router.include_router(ui_allergy.router, prefix="/allergies", tags=["Allergies"])
 api_router.include_router(import_excel.commit_router, prefix="/commit", tags=["Commit"])
+api_router.include_router(order_register.router, prefix="/order", tags=["Order"])
+api_router.include_router(ui_meal_order_register.router, prefix="", tags=["UI"])
 # DEBUG Statics 
 api_router.include_router(ui_test.router, prefix="/statics", tags=["Statics"])
 # END DEBUG
