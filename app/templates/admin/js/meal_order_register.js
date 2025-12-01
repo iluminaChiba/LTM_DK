@@ -4,10 +4,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   submitBtn.addEventListener("click", async () => {
 
-    // HTML body から日付情報を取得
-    const arrivalDate = document.body.dataset.arrivalDate;
-    const applicableDate = document.body.dataset.applicableDate;
-    const sourceFilename = document.body.dataset.sourceFilename;
+    // HTML container から日付情報を取得
+    const container = document.querySelector(".container");
+    const arrivalDate = container.dataset.arrivalDate;
+    const applicableDate = container.dataset.applicableDate;
+    const sourceFilename = container.dataset.sourceFilename;
 
     console.log("[DEBUG] arrivalDate:", arrivalDate);
     console.log("[DEBUG] applicableDate:", applicableDate);

@@ -16,9 +16,48 @@ body {
   margin: 20px;
 }
 
+.summary-and-action {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: auto;
+  max-width: 720px;
+  gap: 1rem;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.summary-text {
+  margin: 0;
+}
+
+.btn-confirm {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  font-size: 14px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-confirm:hover {
+  background-color: #45a049;
+}
+
+
 h1 {
   font-size: 1.4rem;
   margin-bottom: 1rem;
+}
+
+.order-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin: 10px 0 15px 0;
 }
 
 table {
@@ -31,6 +70,14 @@ th,
 td {
   border: 1px solid #bbb;
   padding: 6px 10px;
+}
+
+th {
+  background: #f7f7f7;
+}
+
+tr:hover {
+  background: #fafafa;
 }
 
 .qty-input {
