@@ -1,7 +1,7 @@
 # app/api/router.py
 
 from fastapi import APIRouter
-from app.api import person, meal, meal_log, supply, reports, entry, ui_test, ui_allergy, allergy, pending_box
+from app.api import person, meal, meal_log, supply, reports, entry, ui_test, ui_allergy, allergy, pending_box, daily_stock, order, stock
 from app.api.admin.router import admin_router
 
 
@@ -14,6 +14,9 @@ api_router.include_router(allergy.router, prefix="/allergy", tags=["Allergy"])
 api_router.include_router(meal_log.router, prefix="/meal_logs", tags=["MealLogs"])
 api_router.include_router(supply.router, prefix="/supplies", tags=["Supplies"])
 api_router.include_router(pending_box.router, prefix="/pending_box", tags=["PendingBox"])
+api_router.include_router(daily_stock.router, prefix="/daily_stocks", tags=["DailyStocks"])
+api_router.include_router(order.router, prefix="/orders", tags=["Orders"])
+api_router.include_router(stock.router, prefix="/stock", tags=["Stock"])
 
 # レポート・エントリー
 api_router.include_router(reports.router, prefix="/reports", tags=["Reports"])

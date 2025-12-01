@@ -7,3 +7,5 @@ from .allergy import Allergy
 from .pending_box import PendingBox
 from .side_dish import SideDish
 from .meal_side_dish import MealSideDish
+from .daily_stock import DailyStock
+from .order import Order
