@@ -43,6 +43,27 @@ CREATE TABLE meals (
   INDEX idx_meals_furigana(furigana)
 );
 -- ============================================
+--  side_dishes: 副菜マスタ
+-- ============================================
+CREATE TABLE side_dishes (
+  side_dish_id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  is_deleted TINYINT(1) NOT NULL DEFAULT 0,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+-- ============================================
+--  meal_side_dish: 食事と副菜の関連付け
+-- ============================================
+CREATE TABLE meal_side_dish (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  meal_id INT NOT NULL,
+  side_dish_id INT NOT NULL,
+  position INT NOT NULL,
+  FOREIGN KEY (meal_id) REFERENCES meals(meal_id),
+  FOREIGN KEY (side_dish_id) REFERENCES side_dishes(side_dish_id)
+);
+-- ============================================
 --  allergies: アレルギー情報
 -- ============================================
 CREATE TABLE allergies (
