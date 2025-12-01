@@ -1,0 +1,574 @@
+[
+  {
+    "side_dish_id": 1,
+    "name": "あさりとキャベツのコンソメ煮"
+  },
+  {
+    "side_dish_id": 2,
+    "name": "あじの大葉フライ"
+  },
+  {
+    "side_dish_id": 3,
+    "name": "えびトマトクリームパスタ"
+  },
+  {
+    "side_dish_id": 4,
+    "name": "おからのツナサラダ"
+  },
+  {
+    "side_dish_id": 5,
+    "name": "おからのマヨサラダ"
+  },
+  {
+    "side_dish_id": 6,
+    "name": "かに玉風オムレツ"
+  },
+  {
+    "side_dish_id": 7,
+    "name": "かぶらのうすくず煮"
+  },
+  {
+    "side_dish_id": 8,
+    "name": "ごぼうの塩きんぴら"
+  },
+  {
+    "side_dish_id": 9,
+    "name": "さつま芋のキャラメルバター"
+  },
+  {
+    "side_dish_id": 10,
+    "name": "さつま芋のハニーミルク煮"
+  },
+  {
+    "side_dish_id": 11,
+    "name": "さつま芋の甘煮"
+  },
+  {
+    "side_dish_id": 12,
+    "name": "じゃが芋のマスタード和え"
+  },
+  {
+    "side_dish_id": 13,
+    "name": "じゃが芋の和風あんがらめ"
+  },
+  {
+    "side_dish_id": 14,
+    "name": "たらこスパゲティー"
+  },
+  {
+    "side_dish_id": 15,
+    "name": "のり塩大根"
+  },
+  {
+    "side_dish_id": 16,
+    "name": "はるさめのピリ辛和え"
+  },
+  {
+    "side_dish_id": 17,
+    "name": "ひじきとえのきの中華和え"
+  },
+  {
+    "side_dish_id": 18,
+    "name": "ひじきとえのきの中華炒め"
+  },
+  {
+    "side_dish_id": 19,
+    "name": "ひじきと枝豆の炒め煮"
+  },
+  {
+    "side_dish_id": 20,
+    "name": "ひじきの和え物"
+  },
+  {
+    "side_dish_id": 21,
+    "name": "ひじきの炒め煮"
+  },
+  {
+    "side_dish_id": 22,
+    "name": "ひじきの煮物"
+  },
+  {
+    "side_dish_id": 23,
+    "name": "ほうれん草とマカロニの塩だれ和え"
+  },
+  {
+    "side_dish_id": 24,
+    "name": "ほうれん草と鶏の和え物"
+  },
+  {
+    "side_dish_id": 25,
+    "name": "ほうれん草のふわふわたまご和え"
+  },
+  {
+    "side_dish_id": 26,
+    "name": "ほうれん草のわさび和え"
+  },
+  {
+    "side_dish_id": 27,
+    "name": "ほうれん草のコーンソース"
+  },
+  {
+    "side_dish_id": 28,
+    "name": "ほうれん草のナムル"
+  },
+  {
+    "side_dish_id": 29,
+    "name": "もやしの胡麻酢和え"
+  },
+  {
+    "side_dish_id": 30,
+    "name": "やみつき人参"
+  },
+  {
+    "side_dish_id": 31,
+    "name": "れんこんとツナのサラダ"
+  },
+  {
+    "side_dish_id": 32,
+    "name": "れんこんと枝豆の甘辛炒め"
+  },
+  {
+    "side_dish_id": 33,
+    "name": "れんこんのカレー焼き"
+  },
+  {
+    "side_dish_id": 34,
+    "name": "れんこんの山椒味噌和え"
+  },
+  {
+    "side_dish_id": 35,
+    "name": "オクラのサラダ"
+  },
+  {
+    "side_dish_id": 36,
+    "name": "オクラの和え物"
+  },
+  {
+    "side_dish_id": 37,
+    "name": "キャベツのサラダ"
+  },
+  {
+    "side_dish_id": 38,
+    "name": "キャベツのチョレギ風サラダ"
+  },
+  {
+    "side_dish_id": 39,
+    "name": "キャベツのツナマヨサラダ"
+  },
+  {
+    "side_dish_id": 40,
+    "name": "キャロットラペ"
+  },
+  {
+    "side_dish_id": 41,
+    "name": "コロッケ"
+  },
+  {
+    "side_dish_id": 42,
+    "name": "コロッケのえびトマトクリームソース"
+  },
+  {
+    "side_dish_id": 43,
+    "name": "コールスローサラダ"
+  },
+  {
+    "side_dish_id": 44,
+    "name": "コーンと枝豆のソテー"
+  },
+  {
+    "side_dish_id": 45,
+    "name": "コーンクリームスパゲティー"
+  },
+  {
+    "side_dish_id": 46,
+    "name": "コーンコロッケ"
+  },
+  {
+    "side_dish_id": 47,
+    "name": "コーンマッシュポテト"
+  },
+  {
+    "side_dish_id": 48,
+    "name": "スパゲティナポリタン"
+  },
+  {
+    "side_dish_id": 49,
+    "name": "タッカルビ風"
+  },
+  {
+    "side_dish_id": 50,
+    "name": "チキンナゲット"
+  },
+  {
+    "side_dish_id": 51,
+    "name": "チキンリング"
+  },
+  {
+    "side_dish_id": 52,
+    "name": "チンゲン菜と春雨の中華煮"
+  },
+  {
+    "side_dish_id": 53,
+    "name": "チンゲン菜のごま和え"
+  },
+  {
+    "side_dish_id": 54,
+    "name": "チンゲン菜のナムル"
+  },
+  {
+    "side_dish_id": 55,
+    "name": "チンゲン菜の中華和え"
+  },
+  {
+    "side_dish_id": 56,
+    "name": "チンゲン菜の洋風和え"
+  },
+  {
+    "side_dish_id": 57,
+    "name": "ヂヂミ"
+  },
+  {
+    "side_dish_id": 58,
+    "name": "バターコーン"
+  },
+  {
+    "side_dish_id": 59,
+    "name": "ブロッコリーのガーリック炒め"
+  },
+  {
+    "side_dish_id": 60,
+    "name": "ブロッコリーのペッパー炒め"
+  },
+  {
+    "side_dish_id": 61,
+    "name": "マカロニのオーロラサラダ"
+  },
+  {
+    "side_dish_id": 62,
+    "name": "マカロニのカレー煮込み"
+  },
+  {
+    "side_dish_id": 63,
+    "name": "マカロニのツナマヨサラダ"
+  },
+  {
+    "side_dish_id": 64,
+    "name": "マカロニの南瓜クリーム煮"
+  },
+  {
+    "side_dish_id": 65,
+    "name": "マカロニサラダ"
+  },
+  {
+    "side_dish_id": 66,
+    "name": "ミニこんにゃくステーキ"
+  },
+  {
+    "side_dish_id": 67,
+    "name": "ミニソース焼きそば風"
+  },
+  {
+    "side_dish_id": 68,
+    "name": "ミートスパゲッティ"
+  },
+  {
+    "side_dish_id": 69,
+    "name": "ミートボール"
+  },
+  {
+    "side_dish_id": 70,
+    "name": "ミートボールのカレー煮込み"
+  },
+  {
+    "side_dish_id": 71,
+    "name": "ヤンニョムちくわ"
+  },
+  {
+    "side_dish_id": 72,
+    "name": "レンコンの炒めなます"
+  },
+  {
+    "side_dish_id": 73,
+    "name": "中華マッシュポテト"
+  },
+  {
+    "side_dish_id": 74,
+    "name": "中華焼きそば風"
+  },
+  {
+    "side_dish_id": 75,
+    "name": "人参とツナの旨塩炒め"
+  },
+  {
+    "side_dish_id": 76,
+    "name": "人参と卵の旨塩炒め"
+  },
+  {
+    "side_dish_id": 77,
+    "name": "人参のナムル風"
+  },
+  {
+    "side_dish_id": 78,
+    "name": "人参サラダ"
+  },
+  {
+    "side_dish_id": 79,
+    "name": "切干大根のサラダ"
+  },
+  {
+    "side_dish_id": 80,
+    "name": "南瓜のごまサラダ"
+  },
+  {
+    "side_dish_id": 81,
+    "name": "南瓜マッシュポテト"
+  },
+  {
+    "side_dish_id": 82,
+    "name": "厚揚げのあんかけ"
+  },
+  {
+    "side_dish_id": 83,
+    "name": "厚揚げのわさび味噌あん"
+  },
+  {
+    "side_dish_id": 84,
+    "name": "厚揚げのカレーパン粉焼き"
+  },
+  {
+    "side_dish_id": 85,
+    "name": "厚揚げのカレー煮"
+  },
+  {
+    "side_dish_id": 86,
+    "name": "厚揚げのピザ風焼き"
+  },
+  {
+    "side_dish_id": 87,
+    "name": "厚揚げの味噌煮"
+  },
+  {
+    "side_dish_id": 88,
+    "name": "味噌卯の花"
+  },
+  {
+    "side_dish_id": 89,
+    "name": "和風ポテトサラダ"
+  },
+  {
+    "side_dish_id": 90,
+    "name": "和風マカロニサラダ"
+  },
+  {
+    "side_dish_id": 91,
+    "name": "塩レモン春雨"
+  },
+  {
+    "side_dish_id": 92,
+    "name": "大根ときくらげの塩麴和え"
+  },
+  {
+    "side_dish_id": 93,
+    "name": "大根とパプリカのマリネ"
+  },
+  {
+    "side_dish_id": 94,
+    "name": "大根と大根菜のとも和え"
+  },
+  {
+    "side_dish_id": 95,
+    "name": "大根のかにかまあんかけ"
+  },
+  {
+    "side_dish_id": 96,
+    "name": "大根のさっぱりサラダ"
+  },
+  {
+    "side_dish_id": 97,
+    "name": "大根のさっぱり酢和え"
+  },
+  {
+    "side_dish_id": 98,
+    "name": "大根のコンソメ炒め"
+  },
+  {
+    "side_dish_id": 99,
+    "name": "大根のナムル"
+  },
+  {
+    "side_dish_id": 100,
+    "name": "大根のピーナッツ和え"
+  },
+  {
+    "side_dish_id": 101,
+    "name": "大根の煮物"
+  },
+  {
+    "side_dish_id": 102,
+    "name": "大根菜のふわとろたまごあん"
+  },
+  {
+    "side_dish_id": 103,
+    "name": "大豆とさつまいもの甘辛揚げ"
+  },
+  {
+    "side_dish_id": 104,
+    "name": "小松菜とコーンのソテー"
+  },
+  {
+    "side_dish_id": 105,
+    "name": "小松菜とツナのサラダ"
+  },
+  {
+    "side_dish_id": 106,
+    "name": "小松菜と卵の炒め物"
+  },
+  {
+    "side_dish_id": 107,
+    "name": "小松菜のあんがらめ"
+  },
+  {
+    "side_dish_id": 108,
+    "name": "小松菜のお浸し"
+  },
+  {
+    "side_dish_id": 109,
+    "name": "小松菜のごま和え"
+  },
+  {
+    "side_dish_id": 110,
+    "name": "小松菜のコンソメ風味"
+  },
+  {
+    "side_dish_id": 111,
+    "name": "小松菜のソテー"
+  },
+  {
+    "side_dish_id": 112,
+    "name": "小松菜のピーナッツ和え"
+  },
+  {
+    "side_dish_id": 113,
+    "name": "小松菜の和え物"
+  },
+  {
+    "side_dish_id": 114,
+    "name": "彩りマッシュポテト"
+  },
+  {
+    "side_dish_id": 115,
+    "name": "揚げ茄子の肉味噌あん"
+  },
+  {
+    "side_dish_id": 116,
+    "name": "明太マヨポテト"
+  },
+  {
+    "side_dish_id": 117,
+    "name": "春巻き"
+  },
+  {
+    "side_dish_id": 118,
+    "name": "春雨と野菜の旨味炒め"
+  },
+  {
+    "side_dish_id": 119,
+    "name": "春雨のうま塩サラダ"
+  },
+  {
+    "side_dish_id": 120,
+    "name": "春雨の中華煮"
+  },
+  {
+    "side_dish_id": 121,
+    "name": "春雨の肉味噌とじ"
+  },
+  {
+    "side_dish_id": 122,
+    "name": "春雨サラダ"
+  },
+  {
+    "side_dish_id": 123,
+    "name": "春雨炒め"
+  },
+  {
+    "side_dish_id": 124,
+    "name": "春雨肉味噌炒め"
+  },
+  {
+    "side_dish_id": 125,
+    "name": "柚子こしょう香るれんこん練り天"
+  },
+  {
+    "side_dish_id": 126,
+    "name": "洋風煮"
+  },
+  {
+    "side_dish_id": 127,
+    "name": "炊き合わせ"
+  },
+  {
+    "side_dish_id": 128,
+    "name": "照り焼きミートボール"
+  },
+  {
+    "side_dish_id": 129,
+    "name": "白菜の和え物"
+  },
+  {
+    "side_dish_id": 130,
+    "name": "肉団子のデミグラスソースかけ"
+  },
+  {
+    "side_dish_id": 131,
+    "name": "茄子のポン酢和え"
+  },
+  {
+    "side_dish_id": 132,
+    "name": "菜の花のペペロンチーノ"
+  },
+  {
+    "side_dish_id": 133,
+    "name": "蓮根とベーコンのマスタード炒め"
+  },
+  {
+    "side_dish_id": 134,
+    "name": "蓮根のマスタード炒め"
+  },
+  {
+    "side_dish_id": 135,
+    "name": "蓮根のマヨおかか和え"
+  },
+  {
+    "side_dish_id": 136,
+    "name": "豆腐の卵とじ"
+  },
+  {
+    "side_dish_id": 137,
+    "name": "豆腐ハンバーグの明太マヨソース"
+  },
+  {
+    "side_dish_id": 138,
+    "name": "野菜コロッケ"
+  },
+  {
+    "side_dish_id": 139,
+    "name": "野菜炒め"
+  },
+  {
+    "side_dish_id": 140,
+    "name": "高野豆腐のから揚げ"
+  },
+  {
+    "side_dish_id": 141,
+    "name": "高野豆腐の含め煮"
+  },
+  {
+    "side_dish_id": 142,
+    "name": "鶏ねぎ黒胡椒メンチ"
+  },
+  {
+    "side_dish_id": 143,
+    "name": "鶏天"
+  }
+]
