@@ -31,7 +31,8 @@ def convert_meals(old_path="app/resources/monthly_menu.json", new_path="app/reso
 
         new_meals.append({
             "meal_id": m["meal_id"],
-            "name": m["meal_name"],
+            "meal_name": m["meal_name"],
+            "furigana": m.get("furigana"),
             "sides": sides,
             "kcal": m["kcal"],
             "protein": m["protein"],
@@ -44,8 +45,24 @@ def convert_meals(old_path="app/resources/monthly_menu.json", new_path="app/reso
     new_file = Path(new_path)
     new_file.parent.mkdir(parents=True, exist_ok=True)
     
+    # sides配列を1行にするため、カスタム整形
     with open(new_file, "w", encoding="utf-8") as f:
-        json.dump(new_meals, f, ensure_ascii=False, indent=2)
+        f.write("[\n")
+        for i, meal in enumerate(new_meals):
+            # sides配列を1行で出力
+            sides_str = json.dumps(meal["sides"], ensure_ascii=False)
+            f.write("  {\n")
+            f.write(f'    "meal_id": {meal["meal_id"]},\n')
+            f.write(f'    "meal_name": "{meal["meal_name"]}",\n')
+            f.write(f'    "furigana": "{meal.get("furigana", "")}",\n')
+            f.write(f'    "sides": {sides_str},\n')
+            f.write(f'    "kcal": {meal["kcal"]},\n')
+            f.write(f'    "protein": {meal["protein"]},\n')
+            f.write(f'    "fat": {meal["fat"]},\n')
+            f.write(f'    "carb": {meal["carb"]},\n')
+            f.write(f'    "salt": {meal["salt"]}\n')
+            f.write("  }" + ("," if i < len(new_meals) - 1 else "") + "\n")
+        f.write("]\n")
 
     print(f"meals.json を新形式に変換しました: {new_file} ({len(new_meals)}件)")
 

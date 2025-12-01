@@ -11,9 +11,6 @@ from decimal import Decimal
 class MealBase(BaseModel):
     meal_name: str
     furigana: str
-    side1: Optional[str] = None
-    side2: Optional[str] = None
-    side3: Optional[str] = None
     kcal: Optional[Decimal] = None
     protein: Optional[Decimal] = None
     fat: Optional[Decimal] = None
@@ -36,9 +33,6 @@ class MealCreate(MealBase):
 class MealUpdate(BaseModel):
     meal_name: Optional[str] = None
     furigana: Optional[str] = None
-    side1: Optional[str] = None
-    side2: Optional[str] = None
-    side3: Optional[str] = None
     kcal: Optional[Decimal] = None
     protein: Optional[Decimal] = None
     fat: Optional[Decimal] = None
@@ -55,9 +49,6 @@ class Meal(BaseModel):
     meal_id: int
     meal_name: str
     furigana: str
-    side1: Optional[str] = None
-    side2: Optional[str] = None
-    side3: Optional[str] = None
     kcal: Optional[Decimal] = None
     protein: Optional[Decimal] = None
     fat: Optional[Decimal] = None

@@ -11,11 +11,6 @@ class Meal(Base):
     meal_name = Column(String(255), nullable=False)
     furigana = Column(String(255), nullable=False, index=True)
     
-    # 副菜情報
-    side1 = Column(String(255), nullable=True)
-    side2 = Column(String(255), nullable=True)
-    side3 = Column(String(255), nullable=True)
-    
     # 栄養成分
     kcal = Column(DECIMAL(6, 1), nullable=True)
     protein = Column(DECIMAL(6, 1), nullable=True)
