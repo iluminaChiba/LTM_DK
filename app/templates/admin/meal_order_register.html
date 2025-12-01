@@ -3,9 +3,14 @@
 
 <head>
   <meta charset="UTF-8">
+  <base href="./app/templates/admin/">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>昼食パック発注登録</title>
-  <link rel="stylesheet" href="/api/admin/css/meal_order_register.css">
+  {% if preview_mode %}
+    <link rel="stylesheet" href="css/meal_order_register.css">
+  {% else %}
+    <link rel="stylesheet" href="/api/admin/css/meal_order_register.css">
+  {% endif %}
 </head>
 
 <body>
@@ -46,7 +51,11 @@
         </tbody>
       </table>
   </div>
-  <script src="/api/admin/js/meal_order_register.js"></script>
+  {% if preview_mode %}
+    <script src="js/meal_order_register.js"></script>
+  {% else %}
+    <script src="/api/admin/js/meal_order_register.js"></script>
+  {% endif %}
 </body>
 
 </html>

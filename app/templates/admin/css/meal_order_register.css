@@ -16,13 +16,12 @@ body {
   margin: 20px;
 }
 
-.summary-and-action {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: auto;
-  max-width: 720px;
-  gap: 1rem;
+.summary-and-action{
+  max-width: 520px;
+}
+
+.summary-and-action td {
+  border: none;
 }
 
 .container {

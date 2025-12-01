@@ -5,7 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Excel 取り込み（テストUI）</title>
-    <link rel="stylesheet" href="/api/admin/css/excel_import.css">
+    {% if preview_mode %}
+        <link rel="stylesheet" href="css/excel_import.css">
+    {% else %}
+        <link rel="stylesheet" href="/api/admin/css/excel_import.css">
+    {% endif %}
 </head>
 
 <body>
@@ -26,8 +30,11 @@
 
     <h3>プレビュー結果</h3>
     <pre id="previewArea">(ここに結果が出ます)</pre>
-
-    <script src="/api/admin/js/excel_import.js"></script>
+    {% if preview_mode %}
+        <script src="js/excel_import.js"></script>
+    {% else %}
+        <script src="/api/admin/js/excel_import.js"></script>
+    {% endif %}
 </body>
 
 </html>

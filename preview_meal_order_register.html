@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <base href="./app/templates/admin/">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>昼食パック発注登録</title>
+  <link rel="stylesheet" href="css/meal_order_register.css">
+</head>
+
+<body>
+  <div class="container" data-arrival-date="2025-12-07"
+    data-applicable-date="2025-12-08" data-source-filename="dummy.xlsx">
+    <h1>昼食パック発注登録（meal_order_register）</h1>
+    <table class="summary-and-action">
+      <tr><td colspan="2">ファイル名：dummy.xlsx</td></tr>
+      <tr>
+        <td>抽出件数：3 件</td>
+        <td><button id="submit-btn" class="btn-confirm">登録（confirm）</button></td>
+      </tr>
+    </table>
+    <table id="order-table">
+        <thead>
+          <tr>
+            <th>行</th>
+            <th>Meal ID</th>
+            <th>名前</th>
+            <th>数量</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr>
+            <td>6</td>
+            <td>03001</td>
+            <td>たらの牛だしあん</td>
+            <td>
+              <label for="qty-03001" class="visually-hidden">
+                たらの牛だしあんの数量
+              </label>
+              <input type="number" id="qty-03001" class="qty-input" data-meal-id="03001"
+                value="">
+            </td>
+          </tr>
+          
+          <tr>
+            <td>7</td>
+            <td>03002</td>
+            <td>豚バラ肉の豆乳ソースがけ</td>
+            <td>
+              <label for="qty-03002" class="visually-hidden">
+                豚バラ肉の豆乳ソースがけの数量
+              </label>
+              <input type="number" id="qty-03002" class="qty-input" data-meal-id="03002"
+                value="4">
+            </td>
+          </tr>
+          
+          <tr>
+            <td>8</td>
+            <td>03005</td>
+            <td>鮭の塩焼き</td>
+            <td>
+              <label for="qty-03005" class="visually-hidden">
+                鮭の塩焼きの数量
+              </label>
+              <input type="number" id="qty-03005" class="qty-input" data-meal-id="03005"
+                value="2">
+            </td>
+          </tr>
+          
+        </tbody>
+      </table>
+  </div>
+  <script src="js/meal_order_register.js"></script>
+</body>
+
+</html>

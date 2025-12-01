@@ -79,7 +79,7 @@ CREATE TABLE allergies (
   PRIMARY KEY (meal_id),
   CONSTRAINT fk_allergies_meal FOREIGN KEY (meal_id) REFERENCES meals(meal_id) ON DELETE CASCADE
 );
---- ============================================
+-- ============================================
 --  pending_box: 食パック発注の仮登録テーブル
 -- ============================================
 CREATE TABLE pending_box (

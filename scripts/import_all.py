@@ -9,13 +9,14 @@ sys.path.insert(0, str(BASE_DIR))
 from app.core.database import SessionLocal
 from scripts.import_meals import import_meals
 from scripts.import_allergies import import_allergies
+from sqlalchemy import text
 
 def wait_for_mysql():
     """MySQL が起動するまで待機する。最大30秒。"""
     for _ in range(30):
         try:
             db = SessionLocal()
-            db.execute("SELECT 1")
+            db.execute(text("SELECT 1"))
             db.close()
             return True
         except Exception:
