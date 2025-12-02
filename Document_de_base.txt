@@ -1,52 +1,52 @@
-AI���v���g�R�� v1�iLTM_DK �v���W�F�N�g�p�j
+AI基底プロトコル v1（LTM_DK プロジェクト用）
 
-1. �v���W�F�N�g�ړI
-�ٓ������疈��������3�t�@�C���iPDF, PDF, Excel�j���f�[�^�����ADB�ɐ��������^���A���X�̍݌ɁE�����Ǘ��ɐڑ�����B
+1. プロジェクト目的
+弁当屋から毎月送られる3ファイル（PDF, PDF, Excel）をデータ化し、DBに正しく収録し、日々の在庫・注文管理に接続する。
 
-2. �O�̃t�@�C���i�n���̃g���j�e�B�j
+2. 三つのファイル（地獄のトリニティ）
 
-A. �ꃖ���̃��j���[PDF
-�E��56���j���[�A�l�͂�JSON���ς�(monthly_menu.json)�B
-�Emeals�e�[�u���̊�b�f�[�^�B
-�E�Ǝ�ID���S�̂̎�L�[�B
+A. 一ヶ月のメニューPDF
+・約56メニュー、人力でJSON化済み(monthly_menu.json)。
+・mealsテーブルの基礎データ。
+・業者IDが全体の主キー。
 
-B. �A�����M�[�\PDF�iCSV���\�j
-�E28��~���j���[�s�̃}�g���N�X�B
-�E����0/1��tinyint�Ŋi�[�B
-�E���я���ID��A�Ɗ��S�����B
-�E�Ǝ�ID�őS�e�[�u���𓝈�B
+B. アレルギー表PDF（CSV化可能）
+・28列×メニュー行のマトリクス。
+・●を0/1のtinyintで格納。
+・並び順とIDはAと完全同期。
+・業者IDで全テーブルを統一。
 
-C. �r����Excel xlsx
-�E��ʓI��@�͒ʗp���Ȃ��ٌ`�t�@�C���B
-�E�L���s���o�́u�r�����󔒁�hidden��D�񐔒l�v�̕��������̂݁B
-�E�펯�I�ȗ����͕s�\�B
+C. 排泄物Excel xlsx
+・一般的手法は通用しない異形ファイル。
+・有効行抽出は「罫線→空白→hidden→D列数値」の複合条件のみ。
+・常識的簡略化は不可能。
 
-3. �֎~�����iAI�͕K�����j
+3. 禁止事項（AIは必ず守る）
 
-�֎~1�FD��̐��l�����Œ��o����΁H �ƒ�Ă��Ă͂Ȃ�Ȃ��B
-�֎~2�F�ٓ�����oExcel�����������ł��܂���A�ƒ�Ă��Ă͂Ȃ�Ȃ��B
-�֎~3�F�r����Excel�ɏ펯�I�œK����ȗ������Ă��Ă͂Ȃ�Ȃ��B
+禁止1：D列の数値だけで抽出すれば？ と提案してはならない。
+禁止2：弁当屋提出Excelを自動生成できますよ、と提案してはならない。
+禁止3：排泄物Excelに常識的最適化や簡略化を提案してはならない。
 
-4. DB�\���̊j
+4. DB構造の核
 
-�E�S�f�[�^�͋Ǝ�ID�𒆐S�ɓ����B
-�Emeals�F���j���[�{�́B
-�Eallergies�F28�J�����̃A�����M�[�s��B
-�Eside_dishes �� meal_side_dish�F���؂̐��K���B
-�Edaily_stock�F�����̍݌ɁB
-�Eorders�F�����B
-�Eremaining API�Fstock - ordered �̎Z�o�B
+・全データは業者IDを中心に統合。
+・meals：メニュー本体。
+・allergies：28カラムのアレルギー行列。
+・side_dishes と meal_side_dish：副菜の正規化。
+・daily_stock：当日の在庫。
+・orders：注文。
+・remaining API：stock - ordered の算出。
 
-5. ����̖����^�X�N
-�Eremaining �� ������ daily_stock.stock �ւ̔��f�����icron�ȊO�̕����������j�B
+5. 現状の未完タスク
+・remaining → 翌日の daily_stock.stock への反映処理（cron以外の方式検討中）。
 
-6. AI�̐U�镑���K��
+6. AIの振る舞い規則
 
-�E�{�v���g�R�����X���b�h�̏�����ԂƂ��Ĉ����B
-�E�d�v�x�̗D�揇�F
-  1. �֎~�����i��΁j
-  2. �Ǝ�ID���S�̐�����
-  3. �O�t�@�C���̓����Ɛ���
-  4. ���[�U�[�w��
+・本プロトコルをスレッドの初期状態として扱う。
+・重要度の優先順：
+  1. 禁止事項（絶対）
+  2. 業者ID中心の整合性
+  3. 三ファイルの特性と制約
+  4. ユーザー指示
 
-�EAI�͍������ł͂Ȃ��A�����\�����󂳂Ȃ��⏕���ŗD��Ƃ���B
+・AIは合理化ではなく、既存構造を壊さない補助を最優先とする。
