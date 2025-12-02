@@ -570,5 +570,13 @@
   {
     "side_dish_id": 143,
     "name": "鶏天"
-  }
+  },
+  {
+    "side_dish_id": 144,
+    "name": "キクラゲの卵炒め"
+  },
+  {
+    "side_dish_id": 145,
+    "name": "メンチカツ"
+  }  
 ]
