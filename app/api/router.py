@@ -25,8 +25,8 @@ api_router.include_router(entry.router, prefix="/entry", tags=["Entry"])
 # UI関連
 api_router.include_router(ui_allergy.router, prefix="/allergies", tags=["Allergies"])
 
-# 管理画面（Excel注文フローを含む）
-api_router.include_router(admin_router, prefix="/admin", tags=["Admin"])
+# 管理画面（Excel注文フローを含む） - タグは各サブルーターで指定
+api_router.include_router(admin_router, prefix="/admin")
 
 # DEBUG Statics 
 api_router.include_router(ui_test.router, prefix="/statics", tags=["Statics"])

@@ -1,4 +1,4 @@
-# app/api/admin/excel_order/router.py
+# app/api/admin/excel_order/upload.py
 
 import secrets
 from sqlalchemy.orm import Session
@@ -16,9 +16,7 @@ import uuid
 
 router = APIRouter()
 
-# サブルーターを統合
-router.include_router(ui_router)
-router.include_router(confirm_router)
+# サブルーターは admin/router.py で個別に登録するため、ここでは統合しない
 
 
 @router.post("/upload")

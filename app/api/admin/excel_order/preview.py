@@ -28,6 +28,18 @@ def has_border(cell) -> bool:
     ])
 
 
+def has_invalid_font_color(cell) -> bool:
+    """フォントカラーが異常な状態（str型エラー）かどうか"""
+    try:
+        if cell.font and cell.font.color:
+            # rgb属性にアクセスしてみる
+            _ = cell.font.color.rgb
+        return False
+    except (TypeError, ValueError, AttributeError):
+        # アクセス時にエラーが出る = 異常なフォントカラー
+        return True
+
+
 def is_blank_like(val) -> bool:
     """pandasが読んだ値が「実質空白」かどうか"""
     if val is None:
@@ -57,11 +69,13 @@ async def parse_excel_order(file_content: bytes, filename: str) -> dict:
     df = pd.read_excel(BytesIO(file_content), engine="openpyxl", sheet_name=0, header=None)
 
     # ============================================
-    # STEP1: C列（3列目）の罫線で候補を絞る
+    # STEP1: C列（3列目）の罫線で候補を絞る + 異常フォントカラー除外
     # ============================================
     candidate_rows = []
     for r in range(START_ROW, END_ROW + 1):
-        if has_border(ws.cell(row=r, column=3)):
+        cell = ws.cell(row=r, column=3)
+        # 罫線があり、かつフォントカラーが正常
+        if has_border(cell) and not has_invalid_font_color(cell):
             candidate_rows.append(r)
 
     # ============================================

@@ -8,6 +8,15 @@ router = APIRouter()
 templates = Jinja2Templates(directory="app/templates")
 
 
+@router.get("/import")
+def excel_import_ui(request: Request):
+    """Excelアップロード画面（入口）"""
+    return templates.TemplateResponse(
+        "admin/excel_import.html",
+        {"request": request}
+    )
+
+
 @router.get("/register")
 def excel_order_register_ui(token: str, request: Request):
     """注文登録画面（トークン経由でプレビューデータを表示）"""
