@@ -646,5 +646,20 @@
     "fat": 14.6,
     "carb": 32.7,
     "salt": 2.5
+  },
+  {
+    "meal_id": 9999,
+    "meal_name": "ご飯パック(180g)",
+    "furigana": "ごはんぱっく",
+    "sides": [0,0,0
+  
+  
+  
+  ],
+    "kcal": 0,
+    "protein": 0,
+    "fat": 0,
+    "carb": 0,
+    "salt": 0
   }
 ]
