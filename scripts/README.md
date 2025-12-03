@@ -23,3 +23,13 @@ docker compose -f docker-compose.dev.yml exec api python scripts/import_meals.py
 ```
 docker compose -f docker-compose.dev.yml exec api python scripts/import_allergies.py
 ```
+---
+### import_allergies.py 
+---
+## allergyに初期データを流し込むだけの役割しか持ちません。
+---
+実行時：
+```
+
+
+docker compose -f docker-compose.dev.yml exec api python scripts/format_json.py resources/monthly_menu.json
