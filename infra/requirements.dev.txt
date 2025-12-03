@@ -11,5 +11,4 @@ jinja2
 pandas
 python-multipart
 openpyxl
-tabula-py
-jpype1
+camelot-py[cv]

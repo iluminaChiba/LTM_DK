@@ -2,10 +2,13 @@
 FROM python:3.11-slim
 WORKDIR /workspace
 
-# 追加：Java 実行環境（tabula 用）
-RUN apt-get update && \
-    apt-get install -y default-jre && \
-    apt-get clean
+# Camelot-py に必要なシステムパッケージ
+RUN apt-get update && apt-get install -y \
+    ghostscript \
+    python3-tk \
+    libgl1 \
+    libglib2.0-0 \
+    && rm -rf /var/lib/apt/lists/*
 
 # 依存関係だけ先にコピーしてキャッシュ効率を最大化 開発用の .dev.txtの方です
 COPY ./infra/requirements.dev.txt /workspace/

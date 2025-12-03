@@ -93,7 +93,7 @@ wsl内で ip addr
 
 netsh interface portproxy add v4tov4 `
   listenport=8000 listenaddress=0.0.0.0 `
-  connectport=8000 connectaddress=172.28.7.75
+  connectport=8000 connectaddress=172.19.123.165
 
 cmd で以下のコマンドで確認
 netstat -ano | findstr :8000
