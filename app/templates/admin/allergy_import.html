@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>アレルギー表 PDF 取り込み（テストUI）</title>
+
+    {% if preview_mode %}
+        <link rel="stylesheet" href="css/allergy_import.css">
+    {% else %}
+        <link rel="stylesheet" href="/api/admin/css/allergy_import.css">
+    {% endif %}
+</head>
+
+<body>
+
+    <h2>アレルギー表 PDF 取り込み（事務用）</h2>
+
+    <!-- PDF ファイル選択 -->
+    <label for="pdfFile">PDFファイルを選択:</label>
+    <input type="file" id="pdfFile" accept="application/pdf" />
+
+    <!-- プレビュー実行ボタン -->
+    <button id="run-preview">プレビュー</button>
+
+    <!-- DB 登録ボタン（プレビュー後に有効化予定） -->
+    <button id="run-commit">DBに反映</button>
+
+    <hr>
+
+    <h3>プレビュー結果</h3>
+    <pre id="previewArea">(ここに結果が出ます)</pre>
+
+    {% if preview_mode %}
+        <script src="js/allergy_import.js"></script>
+    {% else %}
+        <script src="/api/admin/js/allergy_import.js"></script>
+    {% endif %}
+</body>
+
+</html>
