@@ -165,9 +165,6 @@ def estimate_allergy_columns(page, dots):
     v_centers = cluster_positions(v_xs_raw, max_gap=1.5)
     v_centers = sorted(v_centers)
 
-    print(f"=== DEBUG: vertical lines clustered = {len(v_centers)} ===")
-    print(f"=== DEBUG: vertical x positions = {v_centers} ===")
-
     if not v_centers:
         raise HTTPException(400, "PDF内の縦罫線を検出できませんでした。レイアウトを確認してください。")
 
@@ -186,7 +183,6 @@ def estimate_allergy_columns(page, dots):
     ]
 
     allergy_boundaries = sorted(allergy_boundaries)
-    print(f"=== DEBUG: allergy_boundaries candidates = {allergy_boundaries} ===")
 
     # 理想は 29列 → 30 本の境界
     expected_boundaries = REQUIRED_COLS + 1
@@ -219,9 +215,6 @@ def estimate_allergy_columns(page, dots):
         (allergy_boundaries[i] + allergy_boundaries[i + 1]) / 2.0
         for i in range(REQUIRED_COLS)
     ]
-
-    print(f"=== DEBUG: allergy_left = {allergy_left}, allergy_right = {allergy_right} ===")
-    print(f"=== DEBUG: col_centers (len={len(col_centers)}) = {col_centers} ===")
 
     return col_centers, allergy_left, allergy_right
 
@@ -266,11 +259,9 @@ async def allergy_upload(file: UploadFile = File(...)):
                 raise HTTPException(400, "PDF からテキストを抽出できませんでした。")
 
             rows = group_rows(words)
-            print(f"=== DEBUG: 抽出行数 = {len(rows)} ===")
 
             # メニュー行だけ抜き出す
             menu_rows = [sorted(r, key=lambda w: w["x0"]) for r in rows if is_menu_row(r)]
-            print(f"=== DEBUG: メニュー行数 = {len(menu_rows)} ===")
 
             if not menu_rows:
                 raise HTTPException(400, "メニュー行が抽出できませんでした。")
@@ -348,8 +339,6 @@ async def allergy_upload(file: UploadFile = File(...)):
                 results.append(rec)
 
             df = pd.DataFrame(results)
-            print(f"=== DEBUG: DataFrame 列数 = {len(df.columns)}, 行数 = {len(df)} ===")
-            print(f"=== DEBUG: DataFrame columns = {list(df.columns)} ===")
 
             preview_json = df.where(pd.notnull(df), None).to_dict(orient="records")
             PREVIEW_CACHE["allergy_preview"] = preview_json
@@ -363,9 +352,6 @@ async def allergy_upload(file: UploadFile = File(...)):
     except HTTPException:
         raise
     except Exception as e:
-        import traceback
-        print(f"\n=== ERROR: {e} ===")
-        print(traceback.format_exc())
         raise HTTPException(500, f"内部エラーが発生しました: {e}")
     finally:
         tmp_path.unlink(missing_ok=True)

@@ -1,0 +1,74 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+
+<h2>アレルギー表 プレビュー</h2>
+
+<p class="text-muted">
+  アレルギー表の内容を確認し、問題なければ下の「DBに登録する」を押してください。<br>
+  新規メニューに該当する行は背景色を変えてあります。
+</p>
+
+<div style="overflow-x: auto; white-space: nowrap;">
+  <table class="allergy-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>メニュー名</th>
+        {% for col in allergy_columns %}
+        <th>{{ col }}</th>
+        {% endfor %}
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for row in items %}
+      <tr class="{% if row.meal_id in new_meal_ids %}new-row{% endif %}">
+        <td>{{ row.meal_id }}</td>
+        <td>{{ row.meal_name }}</td>
+
+        {% for col in allergy_columns %}
+        <td>{% if row[col] == 1 %}●{% endif %}</td>
+        {% endfor %}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<!-- 操作ボタン -->
+<div class="mt-3">
+  <form action="/admin/allergy_admin/commit" method="post" style="display:inline;">
+    <button type="submit">DB に登録する</button>
+  </form>
+
+  {% if new_meal_ids|length > 0 %}
+  <a href="/admin/allergy_admin/new-meal-list" style="margin-left: 1rem;">
+    新規メニューの登録へ →
+  </a>
+  {% endif %}
+</div>
+
+{% endblock %}
+
+
+{% block extra_css %}
+<style>
+  .allergy-table {
+    border-collapse: collapse;
+    font-size: 0.9rem;
+  }
+
+  .allergy-table th,
+  .allergy-table td {
+    border: 1px solid #CCC;
+    padding: 4px 6px;
+    text-align: center;
+  }
+
+  .new-row {
+    background: #fff9d6;
+    /* 優しい黄色(新規行) */
+  }
+</style>
+{% endblock %}

@@ -69,8 +69,8 @@ document.addEventListener("DOMContentLoaded", () => {
             // -----------------------------
             // ★ 新規メニューがある場合の遷移
             // -----------------------------
-            if (json.new_meal_ids && json.new_meal_ids.length > 0) {
-                const ids = json.new_meal_ids.join(",");
+            if (data.new_meal_ids && data.new_meal_ids.length > 0) {
+                const ids = data.new_meal_ids.join(",");
                 window.location.href = `/api/admin/allergy_admin/new_meals?ids=${ids}`;
                 return;
             }
