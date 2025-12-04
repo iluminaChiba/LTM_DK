@@ -11,7 +11,6 @@ from app.core.database import SessionLocal
 
 from scripts.import_sides import import_side_dishes
 from scripts.import_meals import import_meals
-from scripts.import_allergies import import_allergies
 
 
 def wait_for_mysql():
@@ -37,10 +36,8 @@ def main():
     print("▶ meals をインポートします…（副菜リンク生成付き）")
     import_meals()
 
-    print("▶ allergies をインポートします…")
-    import_allergies()
-
     print("🎉 すべての初期データ投入が完了しました！")
+    print("ℹ️  アレルギー情報は管理画面のPDF取り込み機能から登録してください。")
 
 
 if __name__ == "__main__":

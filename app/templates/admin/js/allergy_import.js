@@ -66,7 +66,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
             previewArea.textContent = JSON.stringify(data, null, 2);
 
-            alert("DB登録が完了しました。");
+            // -----------------------------
+            // ★ 新規メニューがある場合の遷移
+            // -----------------------------
+            if (json.new_meal_ids && json.new_meal_ids.length > 0) {
+                const ids = json.new_meal_ids.join(",");
+                window.location.href = `/api/admin/allergy_admin/new_meals?ids=${ids}`;
+                return;
+            }
 
         } catch (err) {
             previewArea.textContent = `通信エラー: ${err}`;
