@@ -25,6 +25,7 @@ C. 排泄物Excel xlsx
 
 禁止1：vendor/venderの表記ゆれから、vendor_item_idは廃止。
 
+
 4. DB構造の核
 
 ・全データは業者ID(meal_id)を中心に統合。
@@ -37,7 +38,8 @@ C. 排泄物Excel xlsx
 
 5. 現状の未完タスク
 ・remaining → 翌日の daily_stock.stock への反映処理（cron以外の方式検討中）。
-・アレルギー表PDF→CSV化スクリプトの作成
+・allergyのconfirm処理の実装、実験、UIとの紐づけ
+
 
 
 6. 次から次へと思いつくが、プライオリティが低いのでペンディングになっていること(参考)
@@ -49,6 +51,7 @@ C. 排泄物Excel xlsx
 
 7. 決着済みのもの
 ・「お米」パックはmeal_idに吸収で決着(ID:9999)
+・アレルギー表PDF→CSV化スクリプトの作成  pdfplumber形式で決着。
 
 
 7. AIの振る舞い規則

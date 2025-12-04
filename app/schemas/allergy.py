@@ -16,7 +16,7 @@ class AllergyBase(BaseModel):
     shrimp: bool = False
     crab: bool = False
     
-    # 特定原材料に準ずるもの（推奨表示）21品目
+    # 特定原材料に準ずるもの（推奨表示）22品目
     walnut: bool = False
     abalone: bool = False
     squid: bool = False

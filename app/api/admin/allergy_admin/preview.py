@@ -19,7 +19,7 @@ BASE_ALLERGY_NAMES = [
     "egg",                 # 卵
     "milk",                # 乳成分
     "wheat",               # 小麦
-    "buckwheat",           # そば
+    "soba",                # そば
     "peanut",              # 落花生
     "shrimp",              # えび
     "crab",                # かに

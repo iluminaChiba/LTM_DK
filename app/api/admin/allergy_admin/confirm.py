@@ -9,7 +9,6 @@ from app.core.preview_cache import PREVIEW_CACHE
 
 router = APIRouter()
 
-
 # ---------------------------------------------------------
 # アレルギー29項目（preview のキーと一致）
 # ---------------------------------------------------------
@@ -23,7 +22,7 @@ ALLERGY_COLS = [
 
 
 # =========================================================
-# commit endpoint
+# commit endpoint（最終形）
 # =========================================================
 @router.post("/confirm", response_model=None)
 def allergy_commit(db: Session = Depends(get_db)):
@@ -36,32 +35,36 @@ def allergy_commit(db: Session = Depends(get_db)):
         raise HTTPException(400, "PREVIEW が存在しません。先に /upload を実行してください。")
 
     # -----------------------------------------------------
-    # 既存DBを取得（差分判定用）
+    # 既存アレルギー行を取得（差分判定用）
     # -----------------------------------------------------
     stmt = select(Allergy)
     existing_rows = {row.meal_id: row for row in db.scalars(stmt).all()}
 
-    new_ids = []
-    updated_ids = []
-    unchanged_ids = []
+    # 結果用
+    new_ids = []          # allergies に新規追加された ID
+    updated_ids = []      # allergies が更新された ID
+    unchanged_ids = []    # 変更なしの ID
+    new_meal_ids = []     # meals に存在しない新規メニュー ID（人間が登録すべき）
+    
+    # 既存 meals の ID セットを取得
+    meals_stmt = select(Meal.meal_id)
+    existing_meal_ids = set(db.scalars(meals_stmt).all())
 
     # -----------------------------------------------------
     # PREVIEW の全レコードを処理
     # -----------------------------------------------------
     for item in preview:
         meal_id = item["meal_id"]
-        name = item["name"]
 
-        # meals 側に存在しなければ作る（必要に応じて）
-        meal_obj = db.get(Meal, meal_id)
-        if meal_obj is None:
-            meal_obj = Meal(meal_id=meal_id, meal_name=name)
-            db.add(meal_obj)
-        else:
-            # name の更新は任意。必要なら以下を有効化
-            meal_obj.name = name
+        # -------------------------------------------------
+        # meals に存在しない ID を検出（新規メニュー）
+        # -------------------------------------------------
+        if meal_id not in existing_meal_ids:
+            new_meal_ids.append(meal_id)
 
-        # allergies 側
+        # -------------------------------------------------
+        # allergies 側の差分処理
+        # -------------------------------------------------
         old = existing_rows.get(meal_id)
 
         if old is None:
@@ -89,7 +92,7 @@ def allergy_commit(db: Session = Depends(get_db)):
                 unchanged_ids.append(meal_id)
 
     # -----------------------------------------------------
-    # DB に存在していたが、今回 PREVIEW にない => 消滅（必要なら返す）
+    # allergies には存在するが PREVIEW に無い ID
     # -----------------------------------------------------
     preview_ids = {item["meal_id"] for item in preview}
     disappeared_ids = list(set(existing_rows.keys()) - preview_ids)
@@ -108,9 +111,12 @@ def allergy_commit(db: Session = Depends(get_db)):
     # -----------------------------------------------------
     return {
         "status": "ok",
-        "total": len(preview),
-        "new": new_ids,
-        "updated": updated_ids,
-        "unchanged": unchanged_ids,
-        "disappeared": disappeared_ids,
+        "total_preview_rows": len(preview),
+        "new_allergies": new_ids,
+        "updated_allergies": updated_ids,
+        "unchanged_allergies": unchanged_ids,
+        "disappeared_allergies": disappeared_ids,
+
+        # ★これが最重要：事務方が登録すべき新規メニュー
+        "new_meal_ids": sorted(new_meal_ids),
     }
