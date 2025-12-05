@@ -8,18 +8,19 @@
 <h2>新規メニュー登録</h2>
 
 <p class="description-text">
-  アレルギー表に新しく登場したメニューです。<br>
-  一か月メニュー表を確認し、正式な料理名を入力してください。
+  アレルギー表に新しく登場したメニューが以下に一覧表示されています。<br>
+  一か月メニューPDFを確認し、正式名称を入力してください。
 </p>
 
 {% if new_meal_ids|length == 0 %}
-  <div class="info-message">
-    現在、登録が必要な新規メニューはありません。
-  </div>
+<div class="info-message">
+  現在、登録が必要な新規メニューはありません。
+</div>
+
 {% else %}
 
-<form id="meal-register-form">
-  <table class="data-table">
+<div class="table-container">
+  <table class="new-meal-table">
     <thead>
       <tr>
         <th class="col-id">ID</th>
@@ -28,56 +29,50 @@
         <th>栄養価（任意）</th>
       </tr>
     </thead>
-    <tbody>
-    {% for mid in new_meal_ids %}
-      <tr>
-        <td>{{ mid }}</td>
+
+    <tbody id="new-meal-rows">
+      {% for mid in new_meal_ids %}
+      <tr data-meal-id="{{ mid }}">
+        <td class="meal-id">{{ mid }}</td>
 
         <td>
-          <input type="text"
-                 name="items[{{ loop.index0 }}][meal_name]"
-                 class="input-field" 
-                 required>
-          <input type="hidden"
-                 name="items[{{ loop.index0 }}][meal_id]"
-                 value="{{ mid }}">
+          <input type="text" class="input-field meal-name" placeholder="例：鶏肉の照り焼き" required>
         </td>
 
         <td>
-          <input type="text"
-                 name="items[{{ loop.index0 }}][furigana]"
-                 class="input-field">
+          <input type="text" class="input-field furigana" placeholder="例：とりにくのてりやき">
         </td>
 
         <td>
           <div class="nutrition-group">
-            <label class="small-label">kcal</label>
-            <input type="number" step="0.1" name="items[{{ loop.index0 }}][kcal]" class="input-field-small">
+            <label>kcal</label>
+            <input type="number" step="0.1" class="input-field-small kcal">
 
-            <label class="small-label">タンパク質</label>
-            <input type="number" step="0.1" name="items[{{ loop.index0 }}][protein]" class="input-field-small">
+            <label>タンパク質</label>
+            <input type="number" step="0.1" class="input-field-small protein">
 
-            <label class="small-label">脂質</label>
-            <input type="number" step="0.1" name="items[{{ loop.index0 }}][fat]" class="input-field-small">
+            <label>脂質</label>
+            <input type="number" step="0.1" class="input-field-small fat">
 
-            <label class="small-label">炭水化物</label>
-            <input type="number" step="0.1" name="items[{{ loop.index0 }}][carb]" class="input-field-small">
+            <label>炭水化物</label>
+            <input type="number" step="0.1" class="input-field-small carb">
 
-            <label class="small-label">塩分</label>
-            <input type="number" step="0.1" name="items[{{ loop.index0 }}][salt]" class="input-field-small">
+            <label>塩分</label>
+            <input type="number" step="0.1" class="input-field-small salt">
           </div>
         </td>
+
       </tr>
-    {% endfor %}
+      {% endfor %}
     </tbody>
   </table>
+</div>
 
-  <div class="meal-actions">
-    <button type="button" id="submit-btn" class="primary-button">
-      登録する
-    </button>
-  </div>
-</form>
+<div class="action-area">
+  <button id="register-submit" class="primary-button">
+    登録する
+  </button>
+</div>
 
 {% endif %}
 {% endblock %}

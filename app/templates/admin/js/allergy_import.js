@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
     const fileInput = document.getElementById("pdfFile");
-    const previewBtn = document.getElementById("run-preview");
-    const goTableViewBtn = document.getElementById("go-tableview");
+    const previewBtn = document.getElementById("preview-action");
+    const tableViewBtn = document.getElementById("tableview-action");
     const previewArea = document.getElementById("previewArea");
 
     // プレビュー処理
@@ -59,7 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    goTableViewBtn.addEventListener("click", () => {
+    tableViewBtn.addEventListener("click", () => {
         if (!window.allergyToken) {
             alert("トークンがありません。先にプレビューを実行してください。");
             return;
@@ -67,30 +67,5 @@ document.addEventListener("DOMContentLoaded", () => {
         window.location.href = `/api/admin/allergy_admin/table-view/${window.allergyToken}`;
     });
 
-    // DB 反映
-    // commitBtn.addEventListener("click", async () => {
-    //     if (!confirm("このデータをDBに登録しますか？")) return;
 
-    //     try {
-    //         const res = await fetch("/api/admin/allergy_admin/confirm", {
-    //             method: "POST"
-    //         });
-
-    //         const data = await res.json();
-
-    //         previewArea.textContent = JSON.stringify(data, null, 2);
-
-    //         // -----------------------------
-    //         // ★ 新規メニューがある場合の遷移
-    //         // -----------------------------
-    //         if (data.new_meal_ids && data.new_meal_ids.length > 0) {
-    //             const ids = data.new_meal_ids.join(",");
-    //             window.location.href = `/api/admin/allergy_admin/new_meals?ids=${ids}`;
-    //             return;
-    //         }
-
-    //     } catch (err) {
-    //         previewArea.textContent = `通信エラー: ${err}`;
-    //     }
-    // });
 });

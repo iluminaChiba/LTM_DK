@@ -8,28 +8,24 @@
 
 {% block content %}
 
-    <h2>アレルギー表 PDF 取り込み（事務用）</h2>
+<h2>アレルギー表 PDF 取り込み（事務用）</h2>
 
-    <p class="description-text">
-        この画面でPDFファイルをアップロードし、アレルギーデータのプレビューを表示します。
-    </p>
+<p class="description-text">
+    この画面でPDFファイルをアップロードし、アレルギーデータのプレビューを表示します。
+</p>
 
-    <div class="input-group">
-        <label for="pdfFile">PDFファイルを選択:</label>
-        <input type="file" 
-               id="pdfFile" 
-               accept="application/pdf" 
-               class="input-field" 
-               style="width: 300px;" />
-        <button id="run-preview" class="primary-button">プレビュー</button>
+<div class="input-group">
+    <label for="pdfFile">PDFファイルを選択:</label>
+    <input type="file" id="pdfFile" accept="application/pdf" class="input-field" />
+    <button id="preview-action" class="primary-button">プレビュー</button>
 
-        <button id="go-tableview" class="primary-button" disabled>テーブル表示へ</button>
-    </div>
+    <button id="tableview-action" class="primary-button" disabled>テーブル表示へ</button>
+</div>
 
-    <hr>
+<hr>
 
-    <h3>プレビュー結果</h3>
-    <pre id="previewArea">(ここに結果が出ます)</pre>
+<h3>プレビュー結果</h3>
+<pre id="previewArea">(ここに結果が出ます)</pre>
 
 {% endblock %}
 

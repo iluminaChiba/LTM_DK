@@ -1,3 +1,7 @@
 .input-group {
-  margin: 30px 0px
-}   
+  margin: 30px 0px;
+}
+
+#pdfFile {
+  width: 300px;
+}

@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Excel 取り込み（テストUI）</title>
     {% if preview_mode %}
-        <link rel="stylesheet" href="css/excel_import.css">
+    <link rel="stylesheet" href="css/excel_import.css">
     {% else %}
-        <link rel="stylesheet" href="/api/admin/css/excel_import.css">
+    <link rel="stylesheet" href="/api/admin/css/excel_import.css">
     {% endif %}
 </head>
 
@@ -21,19 +21,19 @@
     <input type="file" id="excelFile" />
 
     <!-- プレビュー実行ボタン -->
-    <button id="run-preview">プレビュー</button>
+    <button id="preview-action">プレビュー</button>
 
     <!-- 注文画面に遷移するボタン（プレビュー後に有効） -->
-    <button id="go-register">注文画面へ</button>
+    <button id="register-action">注文画面へ</button>
 
     <hr>
 
     <h3>プレビュー結果</h3>
     <pre id="previewArea">(ここに結果が出ます)</pre>
     {% if preview_mode %}
-        <script src="js/excel_import.js"></script>
+    <script src="js/excel_import.js"></script>
     {% else %}
-        <script src="/api/admin/js/excel_import.js"></script>
+    <script src="/api/admin/js/excel_import.js"></script>
     {% endif %}
 </body>
 

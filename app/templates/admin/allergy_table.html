@@ -11,19 +11,15 @@
 <table class="action-area">
   <tr>
     <td class="description-cell">
-      アレルギー表の内容を確認し、問題なければ下の「DBに登録する」を押してください。<br>
+      アレルギー表の内容を確認し、問題なければ右の「DBに登録する」を押してください。<br>
       新規メニューに該当する行は背景色を変えてあります。
     </td>
     <td class="button-cell">
-      <form action="/admin/allergy_admin/commit" method="post">
-        <button type="submit" class="primary-button">DB に登録する</button>
-      </form>
+      <button type="button" class="primary-button" id="commit-submit">DB に登録する</button>
     </td>
     <td class="link-cell">
       {% if new_meal_ids|length > 0 %}
-      <a href="/admin/allergy_admin/new-meal-list" class="link-button">
-        新規メニューの登録へ &rarr;
-      </a>
+      <button type="button" class="primary-button" id="register-action">新規メニューの登録へ</button>
       {% endif %}
     </td>
   </tr>

@@ -1,48 +1,78 @@
-document.getElementById("submit-btn").addEventListener("click", async () => {
+// --------------------------------------------------
+// 新規メニュー登録：同期確定処理 register-submit
+// --------------------------------------------------
 
-  const formEl = document.getElementById("meal-register-form");
-  const formData = new FormData(formEl);
+document.addEventListener("DOMContentLoaded", () => {
+    const registerBtn = document.getElementById("register-submit");
+    const tableBody = document.getElementById("new-meal-rows");
 
-  // FormData → JSON 化
-  const payload = { items: [] };
-  const indexSet = new Set();
+    if (!registerBtn || !tableBody) return;
 
-  for (let [key, value] of formData.entries()) {
-      const match = key.match(/items\[(\d+)\]\[(.+)\]/);
-      if (!match) continue;
+    registerBtn.addEventListener("click", async () => {
+        if (!confirm("入力内容をDBに登録しますか？")) return;
 
-      const idx = match[1];
-      const field = match[2];
-      indexSet.add(idx);
+        // ----------------------------
+        // 入力されたデータを収集（JSON配列化）
+        // ----------------------------
+        const items = [];
 
-      if (!payload.items[idx]) payload.items[idx] = {};
-      payload.items[idx][field] = value;
-  }
+        tableBody.querySelectorAll("tr").forEach(row => {
+            const mealId = row.dataset.mealId;
 
-  // 数値変換（空欄は除外）
-  payload.items = payload.items.map(item => {
-      ["kcal","protein","fat","carb","salt"].forEach(f => {
-          // item[f]が存在する場合のみ処理 (シンプル化のため元のロジックを維持)
-          if (item.hasOwnProperty(f) && item[f] === "") delete item[f];
-          else if (item.hasOwnProperty(f)) item[f] = parseFloat(item[f]);
-      });
-      item.meal_id = parseInt(item.meal_id);
-      return item;
-  }).filter(item => item.meal_id); // meal_id がある行のみフィルタ
+            const mealName = row.querySelector(".meal-name")?.value.trim() || "";
+            const furigana = row.querySelector(".furigana")?.value.trim() || "";
 
-  // ⚠️ FastAPI のエンドポイントに合わせて修正 ⚠️
-  // FastAPI + APIRouter の構成を考慮し、/admin/meals/bulk が正しいと仮定
-  const res = await fetch("/admin/meals/bulk", { 
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-  });
+            const kcal = row.querySelector(".kcal")?.value || null;
+            const protein = row.querySelector(".protein")?.value || null;
+            const fat = row.querySelector(".fat")?.value || null;
+            const carb = row.querySelector(".carb")?.value || null;
+            const salt = row.querySelector(".salt")?.value || null;
 
-  if (res.ok) {
-      alert("メニューを登録しました。");
-      location.reload();
-  } else {
-      const err = await res.json();
-      alert("エラー: " + err.detail);
-  }
+            items.push({
+                meal_id: mealId,
+                meal_name: mealName,
+                furigana: furigana,
+                kcal: kcal ? Number(kcal) : null,
+                protein: protein ? Number(protein) : null,
+                fat: fat ? Number(fat) : null,
+                carb: carb ? Number(carb) : null,
+                salt: salt ? Number(salt) : null
+            });
+        });
+
+        // 必須チェック（ meal_name が空の場合）
+        const missingName = items.find(item => !item.meal_name);
+        if (missingName) {
+            alert("未入力の正式名称があります。全ての行の名前を入力してください。");
+            return;
+        }
+
+        // ----------------------------
+        // API に JSON を送信
+        // ----------------------------
+        try {
+            const res = await fetch("/api/admin/allergy_admin/new-meals/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ items })
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                alert("エラーが発生しました。\n" + JSON.stringify(data, null, 2));
+                return;
+            }
+
+            // ----------------------------
+            // 成功時（自動遷移はしない）
+            // ----------------------------
+            alert("新規メニューの登録が完了しました。");
+
+        } catch (err) {
+            alert("通信エラー: " + err);
+        }
+    });
 });

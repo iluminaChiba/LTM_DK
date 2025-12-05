@@ -1,8 +1,8 @@
 // Excel Order - Upload & Preview
-const runPreviewBtn = document.getElementById("run-preview");
-const goRegisterBtn = document.getElementById("go-register");
+const previewActionBtn = document.getElementById("preview-action");
+const registerActionBtn = document.getElementById("register-action");
 
-runPreviewBtn.addEventListener("click", async () => {
+previewActionBtn.addEventListener("click", async () => {
   const fileInput = document.getElementById("excelFile");
   if (!fileInput.files.length) {
     alert("ファイルを選んでください");
@@ -35,7 +35,7 @@ runPreviewBtn.addEventListener("click", async () => {
   goRegisterBtn.disabled = false;
 });
 
-goRegisterBtn.addEventListener("click", async () => {
+registerActionBtn.addEventListener("click", async () => {
   if (!window.token) {
     alert("トークンがありません。先にプレビューを実行してください。");
     return;

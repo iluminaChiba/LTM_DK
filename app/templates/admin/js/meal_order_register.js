@@ -1,8 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
 
-  const submitBtn = document.getElementById("submit-btn");
+  const commitSubmitBtn = document.getElementById("commit-submit");
 
-  submitBtn.addEventListener("click", async () => {
+  commitSubmitBtn.addEventListener("click", async () => {
 
     // HTML container から日付情報を取得
     const container = document.querySelector(".container");

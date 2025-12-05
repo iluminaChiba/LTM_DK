@@ -7,9 +7,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>昼食パック発注登録</title>
   {% if preview_mode %}
-    <link rel="stylesheet" href="css/meal_order_register.css">
+  <link rel="stylesheet" href="css/meal_order_register.css">
   {% else %}
-    <link rel="stylesheet" href="/api/admin/css/meal_order_register.css">
+  <link rel="stylesheet" href="/api/admin/css/meal_order_register.css">
   {% endif %}
 </head>
 
@@ -18,43 +18,45 @@
     data-applicable-date="{{ preview.applicable_date }}" data-source-filename="{{ preview.filename }}">
     <h1>昼食パック発注登録（meal_order_register）</h1>
     <table class="summary-and-action">
-      <tr><td colspan="2">ファイル名：{{ preview.filename }}</td></tr>
+      <tr>
+        <td colspan="2">ファイル名：{{ preview.filename }}</td>
+      </tr>
       <tr>
         <td>抽出件数：{{ preview.result_rows_count }} 件</td>
-        <td><button id="submit-btn" class="btn-confirm">登録（confirm）</button></td>
+        <td><button id="commit-submit" class="btn-confirm">登録</button></td>
       </tr>
     </table>
     <table id="order-table">
-        <thead>
-          <tr>
-            <th>行</th>
-            <th>Meal ID</th>
-            <th>名前</th>
-            <th>数量</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for row in preview.meals %}
-          <tr>
-            <td>{{ row.excel_row }}</td>
-            <td>{{ row.meal_id }}</td>
-            <td>{{ row.meal_name or '' }}</td>
-            <td>
-              <label for="qty-{{ row.meal_id }}" class="visually-hidden">
-                {{ row.meal_name or 'メニュー' }}の数量
-              </label>
-              <input type="number" id="qty-{{ row.meal_id }}" class="qty-input" data-meal-id="{{ row.meal_id }}"
-                value="{{ row.qty if row.qty is not none else '' }}">
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+      <thead>
+        <tr>
+          <th>行</th>
+          <th>Meal ID</th>
+          <th>名前</th>
+          <th>数量</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in preview.meals %}
+        <tr>
+          <td>{{ row.excel_row }}</td>
+          <td>{{ row.meal_id }}</td>
+          <td>{{ row.meal_name or '' }}</td>
+          <td>
+            <label for="qty-{{ row.meal_id }}" class="visually-hidden">
+              {{ row.meal_name or 'メニュー' }}の数量
+            </label>
+            <input type="number" id="qty-{{ row.meal_id }}" class="qty-input" data-meal-id="{{ row.meal_id }}"
+              value="{{ row.qty if row.qty is not none else '' }}">
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
   </div>
   {% if preview_mode %}
-    <script src="js/meal_order_register.js"></script>
+  <script src="js/meal_order_register.js"></script>
   {% else %}
-    <script src="/api/admin/js/meal_order_register.js"></script>
+  <script src="/api/admin/js/meal_order_register.js"></script>
   {% endif %}
 </body>
 
