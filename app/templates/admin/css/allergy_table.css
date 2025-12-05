@@ -1,0 +1,162 @@
+/* Allergy Table Page Styles */
+
+body {
+  font-family: "MS Gothic", "Osaka-Mono", monospace;
+  font-size: 12px;
+}
+
+.description-text {
+  color: #6c757d;
+  margin-bottom: 15px;
+}
+
+.error-message {
+  color: red;
+  padding: 10px;
+  border: 1px solid red;
+  margin: 10px 0;
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+.allergy-table {
+  border-collapse: collapse;
+  font-size: 11px;
+  width: auto;
+  background-color: #fff;
+  border: 2px solid #000;
+}
+
+.allergy-table th,
+.allergy-table td {
+  border: 1px solid #000;
+  padding: 3px 5px;
+  text-align: center;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+/* ヘッダー行 - PDFの背景色を再現 */
+.allergy-table thead {
+  background-color: #FEF2CB;
+  color: #000;
+  font-weight: bold;
+}
+
+.allergy-table thead th {
+  font-size: 10px;
+  line-height: 1.2;
+  min-width: 20px;
+}
+
+/* アレルギー項目のヘッダーを縦書きに */
+.allergy-table thead th:nth-child(n+3) {
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  height: 80px;
+  padding: 5px 3px;
+  font-size: 11px;
+}
+
+/* ID列と名称列を広めに */
+.allergy-table td:first-child,
+.allergy-table th:first-child {
+  min-width: 60px;
+  text-align: center;
+}
+
+.allergy-table td:nth-child(2),
+.allergy-table th:nth-child(2) {
+  min-width: 200px;
+  text-align: left;
+  padding-left: 8px;
+}
+
+/* アレルギー列は狭く */
+.allergy-table td:nth-child(n+3) {
+  min-width: 18px;
+  max-width: 25px;
+  font-size: 14px;
+}
+
+/* 縞模様：1行目から1行おきに背景色 */
+.allergy-table tbody tr:nth-child(odd) {
+  background-color: #E7FEDE;
+}
+
+.allergy-table tbody tr:nth-child(even) {
+  background-color: #fff;
+}
+
+.allergy-table tbody tr:hover {
+  background-color: #f0f0f0;
+}
+
+.no-data-message {
+  color: #999;
+  padding: 20px;
+  text-align: center;
+}
+
+.action-area {
+  width: auto;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  table-layout: auto;
+}
+
+.action-area td {
+  padding: 10px;
+  border: none;
+  vertical-align: middle;
+}
+
+.action-area .description-cell {
+  color: #6c757d;
+  line-height: 1.5;
+}
+
+.action-area .button-cell {
+  white-space: nowrap;
+  width: 1%;
+  padding-right: 5px;
+}
+
+.action-area .link-cell {
+  white-space: nowrap;
+  width: 1%;
+  padding-left: 5px;
+}
+
+.action-area form {
+  margin: 0;
+  display: inline;
+}
+
+.primary-button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.primary-button:hover {
+  background-color: #45a049;
+}
+
+.link-button {
+  color: #4CAF50;
+  text-decoration: none;
+  padding: 5px 10px;
+}
+
+.link-button:hover {
+  text-decoration: underline;
+}

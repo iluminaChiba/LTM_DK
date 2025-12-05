@@ -1,12 +1,11 @@
 from fastapi import APIRouter, Request, UploadFile, File, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
-
 import pandas as pd
 import tempfile
 from pathlib import Path
 import pdfplumber
-
+from uuid import uuid4
 from app.core.preview_cache import PREVIEW_CACHE
 
 router = APIRouter()
@@ -231,10 +230,12 @@ def detect_column(x0: float, col_centers):
 # =========================================================
 @router.get("/import", response_class=HTMLResponse)
 def allergy_ui(request: Request):
-    return templates.TemplateResponse(
-        "admin/allergy_import.html",
-        {"request": request},
-    )
+    context = {
+        "request": request,
+        "css_root": "/api/admin/css",  # ← この変数を渡す
+        "js_root": "/api/admin/js"     # ← この変数を渡す
+    }
+    return templates.TemplateResponse("admin/allergy_import.html", context)
 
 
 @router.post("/upload")
@@ -341,17 +342,58 @@ async def allergy_upload(file: UploadFile = File(...)):
             df = pd.DataFrame(results)
 
             preview_json = df.where(pd.notnull(df), None).to_dict(orient="records")
-            PREVIEW_CACHE["allergy_preview"] = preview_json
+
+            token = str(uuid4()) # シンプルなトークンを生成
+            
+            # トークンをキーとしてデータを格納
+            PREVIEW_CACHE[token] = preview_json 
+            
+            # 従来の PREVIEW_CACHE["allergy_preview"] は廃止/不要
 
             return {
                 "status": "ok",
                 "rows": len(preview_json),
-                "records": preview_json,
+                "token": token,  # <-- 1. クライアントにトークンを返す
+                "records": preview_json, # <-- 2. デバッグのため、JSONデータも返す
             }
 
     except HTTPException:
         raise
     except Exception as e:
+        # ログ出力（デバッグ用）
+        print(f"Internal Error in PDF processing: {e}")
         raise HTTPException(500, f"内部エラーが発生しました: {e}")
     finally:
         tmp_path.unlink(missing_ok=True)
+
+
+@router.get("/register/{token}")
+async def allergy_register_ui(token: str, request: Request):
+    """
+    指定されたトークンを使ってキャッシュされた解析データを表示する登録画面
+    """
+    if token not in PREVIEW_CACHE:
+        raise HTTPException(404, detail="指定されたトークンに対応する解析データが見つかりません。")
+
+    preview_data = PREVIEW_CACHE[token]
+    
+    return templates.TemplateResponse(
+        "admin/allergy_register.html",
+        {
+            "request": request,
+            "preview": preview_data,
+            "css_root": "/api/admin/css",
+            "js_root": "/api/admin/js"
+        }
+    )
+
+
+@router.get("/data/{token}")
+async def get_cached_data(token: str):
+    """
+    指定されたトークンを使ってキャッシュされた解析データを取得する（API用）
+    """
+    if token not in PREVIEW_CACHE:
+        raise HTTPException(404, detail="指定されたトークンに対応する解析データが見つかりません。")
+
+    return PREVIEW_CACHE[token]

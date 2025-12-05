@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
     const fileInput = document.getElementById("pdfFile");
     const previewBtn = document.getElementById("run-preview");
-    const commitBtn = document.getElementById("run-commit");
+    const goTableViewBtn = document.getElementById("go-tableview");
     const previewArea = document.getElementById("previewArea");
 
     // プレビュー処理
@@ -44,8 +44,14 @@ document.addEventListener("DOMContentLoaded", () => {
             const data = await res.json();
             console.log("Success data:", data);
 
+            // トークンを保存
+            window.allergyToken = data.token;
+
             // 可読性のため整形して表示
             previewArea.textContent = JSON.stringify(data, null, 2);
+
+            // テーブル表示ボタンを有効化
+            goTableViewBtn.disabled = false;
 
         } catch (err) {
             console.error("Fetch error:", err);
@@ -53,30 +59,38 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // DB 反映
-    commitBtn.addEventListener("click", async () => {
-        if (!confirm("このデータをDBに登録しますか？")) return;
-
-        try {
-            const res = await fetch("/api/admin/allergy_admin/confirm", {
-                method: "POST"
-            });
-
-            const data = await res.json();
-
-            previewArea.textContent = JSON.stringify(data, null, 2);
-
-            // -----------------------------
-            // ★ 新規メニューがある場合の遷移
-            // -----------------------------
-            if (data.new_meal_ids && data.new_meal_ids.length > 0) {
-                const ids = data.new_meal_ids.join(",");
-                window.location.href = `/api/admin/allergy_admin/new_meals?ids=${ids}`;
-                return;
-            }
-
-        } catch (err) {
-            previewArea.textContent = `通信エラー: ${err}`;
+    goTableViewBtn.addEventListener("click", () => {
+        if (!window.allergyToken) {
+            alert("トークンがありません。先にプレビューを実行してください。");
+            return;
         }
+        window.location.href = `/api/admin/allergy_admin/table-view/${window.allergyToken}`;
     });
+
+    // DB 反映
+    // commitBtn.addEventListener("click", async () => {
+    //     if (!confirm("このデータをDBに登録しますか？")) return;
+
+    //     try {
+    //         const res = await fetch("/api/admin/allergy_admin/confirm", {
+    //             method: "POST"
+    //         });
+
+    //         const data = await res.json();
+
+    //         previewArea.textContent = JSON.stringify(data, null, 2);
+
+    //         // -----------------------------
+    //         // ★ 新規メニューがある場合の遷移
+    //         // -----------------------------
+    //         if (data.new_meal_ids && data.new_meal_ids.length > 0) {
+    //             const ids = data.new_meal_ids.join(",");
+    //             window.location.href = `/api/admin/allergy_admin/new_meals?ids=${ids}`;
+    //             return;
+    //         }
+
+    //     } catch (err) {
+    //         previewArea.textContent = `通信エラー: ${err}`;
+    //     }
+    // });
 });

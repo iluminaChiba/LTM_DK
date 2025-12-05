@@ -1,42 +1,38 @@
-<!DOCTYPE html>
-<html lang="ja">
+{% extends "admin/base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>アレルギー表 PDF 取り込み（テストUI）</title>
+{% block title %}アレルギー表 PDF 取り込み（テストUI）{% endblock %}
 
-    {% if preview_mode %}
-        <link rel="stylesheet" href="css/allergy_import.css">
-    {% else %}
-        <link rel="stylesheet" href="/api/admin/css/allergy_import.css">
-    {% endif %}
-</head>
+{% block page_css %}
+<link rel="stylesheet" href="{{ css_root }}/allergy_import.css">
+{% endblock %}
 
-<body>
+{% block content %}
 
     <h2>アレルギー表 PDF 取り込み（事務用）</h2>
 
-    <!-- PDF ファイル選択 -->
-    <label for="pdfFile">PDFファイルを選択:</label>
-    <input type="file" id="pdfFile" accept="application/pdf" />
+    <p class="description-text">
+        この画面でPDFファイルをアップロードし、アレルギーデータのプレビューを表示します。
+    </p>
 
-    <!-- プレビュー実行ボタン -->
-    <button id="run-preview">プレビュー</button>
+    <div class="input-group">
+        <label for="pdfFile">PDFファイルを選択:</label>
+        <input type="file" 
+               id="pdfFile" 
+               accept="application/pdf" 
+               class="input-field" 
+               style="width: 300px;" />
+        <button id="run-preview" class="primary-button">プレビュー</button>
 
-    <!-- DB 登録ボタン（プレビュー後に有効化予定） -->
-    <button id="run-commit">DBに反映</button>
+        <button id="go-tableview" class="primary-button" disabled>テーブル表示へ</button>
+    </div>
 
     <hr>
 
     <h3>プレビュー結果</h3>
     <pre id="previewArea">(ここに結果が出ます)</pre>
 
-    {% if preview_mode %}
-        <script src="js/allergy_import.js"></script>
-    {% else %}
-        <script src="/api/admin/js/allergy_import.js"></script>
-    {% endif %}
-</body>
+{% endblock %}
 
-</html>
+{% block page_js %}
+<script src="{{ js_root }}/allergy_import.js"></script>
+{% endblock %}

@@ -17,7 +17,7 @@ def excel_import_ui(request: Request):
     )
 
 
-@router.get("/register")
+@router.get("/register/{token}")
 def excel_order_register_ui(token: str, request: Request):
     """注文登録画面（トークン経由でプレビューデータを表示）"""
     preview = PREVIEW_CACHE.get(token)

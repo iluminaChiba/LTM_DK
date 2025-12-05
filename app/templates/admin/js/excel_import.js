@@ -41,5 +41,5 @@ goRegisterBtn.addEventListener("click", async () => {
     return;
   }
 
-  window.location.href = `/api/admin/excel_order/register?token=${window.token}`;
+  window.location.href = `/api/admin/excel_order/register/${window.token}`;
 });

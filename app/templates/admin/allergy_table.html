@@ -1,41 +1,120 @@
-{% extends "admin/base_simple.html" %}
+{% extends "admin/base.html" %}
+
+{% block page_css %}
+<link rel="stylesheet" href="{{ css_root }}/allergy_table.css">
+{% endblock %}
 
 {% block content %}
 
 <h2>アレルギー表 プレビュー</h2>
 
-<p style="color: #6c757d;">
-  アレルギー表の内容を確認し、問題なければ下の「DBに登録する」を押してください。<br>
-  新規メニューに該当する行は背景色を変えてあります。
-</p>
-
-<div style="overflow-x: auto;">
+<table class="action-area">
+  <tr>
+    <td class="description-cell">
+      アレルギー表の内容を確認し、問題なければ下の「DBに登録する」を押してください。<br>
+      新規メニューに該当する行は背景色を変えてあります。
+    </td>
+    <td class="button-cell">
+      <form action="/admin/allergy_admin/commit" method="post">
+        <button type="submit" class="primary-button">DB に登録する</button>
+      </form>
+    </td>
+    <td class="link-cell">
+      {% if new_meal_ids|length > 0 %}
+      <a href="/admin/allergy_admin/new-meal-list" class="link-button">
+        新規メニューの登録へ &rarr;
+      </a>
+      {% endif %}
+    </td>
+  </tr>
+</table>
+{% if error_message %}
+  <div class="error-message">
+    {{ error_message }}
+  </div>
+{% elif preview_data %}
+<div class="table-container">
   <table class="allergy-table">
+    <thead>
+      <tr>
+        <th>Meal ID</th>
+        <th>名称</th>
+        <th>卵</th>
+        <th>乳</th>
+        <th>小麦</th>
+        <th>そば</th>
+        <th>落花生</th>
+        <th>えび</th>
+        <th>かに</th>
+        <th>くるみ</th>
+        <th>あわび</th>
+        <th>いか</th>
+        <th>いくら</th>
+        <th>さけ</th>
+        <th>さば</th>
+        <th>魚介類</th>
+        <th>牛肉</th>
+        <th>鶏肉</th>
+        <th>豚肉</th>
+        <th>オレンジ</th>
+        <th>キウイ</th>
+        <th>りんご</th>
+        <th>もも</th>
+        <th>バナナ</th>
+        <th>大豆</th>
+        <th>カシュー</th>
+        <th>アーモンド</th>
+        <th>マカダミア</th>
+        <th>やまいも</th>
+        <th>ごま</th>
+        <th>ゼラチン</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in preview_data %}
+      <tr>
+        <td>{{ row.meal_id }}</td>
+        <td>{{ row.name }}</td>
+        <td>{{ '●' if row.egg else '' }}</td>
+        <td>{{ '●' if row.milk else '' }}</td>
+        <td>{{ '●' if row.wheat else '' }}</td>
+        <td>{{ '●' if row.soba else '' }}</td>
+        <td>{{ '●' if row.peanut else '' }}</td>
+        <td>{{ '●' if row.shrimp else '' }}</td>
+        <td>{{ '●' if row.crab else '' }}</td>
+        <td>{{ '●' if row.walnut else '' }}</td>
+        <td>{{ '●' if row.abalone else '' }}</td>
+        <td>{{ '●' if row.squid else '' }}</td>
+        <td>{{ '●' if row.salmon_roe else '' }}</td>
+        <td>{{ '●' if row.salmon else '' }}</td>
+        <td>{{ '●' if row.mackerel else '' }}</td>
+        <td>{{ '●' if row.seafood else '' }}</td>
+        <td>{{ '●' if row.beef else '' }}</td>
+        <td>{{ '●' if row.chicken else '' }}</td>
+        <td>{{ '●' if row.pork else '' }}</td>
+        <td>{{ '●' if row.orange else '' }}</td>
+        <td>{{ '●' if row.kiwi else '' }}</td>
+        <td>{{ '●' if row.apple else '' }}</td>
+        <td>{{ '●' if row.peach else '' }}</td>
+        <td>{{ '●' if row.banana else '' }}</td>
+        <td>{{ '●' if row.soy else '' }}</td>
+        <td>{{ '●' if row.cashew else '' }}</td>
+        <td>{{ '●' if row.almond else '' }}</td>
+        <td>{{ '●' if row.macadamia else '' }}</td>
+        <td>{{ '●' if row.yam else '' }}</td>
+        <td>{{ '●' if row.sesame else '' }}</td>
+        <td>{{ '●' if row.gelatin else '' }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
   </table>
 </div>
-
-<div style="margin-top: 1rem;">
-  <form action="/admin/allergy_admin/commit" method="post" style="display:inline;">
-    <button type="submit">DB に登録する</button>
-  </form>
-
-  {% if new_meal_ids|length > 0 %}
-  <a href="/admin/allergy_admin/new-meal-list" style="margin-left: 1rem;">
-    新規メニューの登録へ &rarr;
-  </a>
-  {% endif %}
-</div>
-
-{% endblock %}
+{% else %}
+  <div class="no-data-message">
+    データがありません。
+  </div>
+{% endif %}
 
 
-{% block extra_css %}
-<style>
-  .allergy-table {
-    border-collapse: collapse;
-    font-size: 0.9rem;
-  }
 
-  /* ... その他のスタイル ... */
-</style>
 {% endblock %}
