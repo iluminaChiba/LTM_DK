@@ -27,6 +27,7 @@ body {
   width: auto;
   background-color: #fff;
   border: 2px solid #000;
+  margin-bottom: 20px;
 }
 
 .allergy-table th,
@@ -106,7 +107,6 @@ body {
   margin: 1rem 0;
   background-color: #f9f9f9;
   border: 1px solid #ddd;
-  table-layout: auto;
 }
 
 .action-area td {
@@ -122,14 +122,12 @@ body {
 
 .action-area .button-cell {
   white-space: nowrap;
-  width: 1%;
-  padding-right: 5px;
+  padding-left: 15px;
 }
 
 .action-area .link-cell {
   white-space: nowrap;
-  width: 1%;
-  padding-left: 5px;
+  padding-left: 15px;
 }
 
 .action-area form {
