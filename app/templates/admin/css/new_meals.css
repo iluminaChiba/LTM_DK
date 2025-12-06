@@ -1,0 +1,19 @@
+.new-meal-table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.new-meal-table th,
+.new-meal-table td {
+  border: 1px solid #ccc;
+  padding: 6px 8px;
+}
+
+.input-text {
+  width: 160px;
+}
+
+.input-num {
+  width: 80px;
+}

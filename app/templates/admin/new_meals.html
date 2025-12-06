@@ -1,28 +1,90 @@
-<form id="new-meals-form" data-token="{{ token }}">
+{% extends "admin/base.html" %}
 
-  {% for meal_id in new_meal_ids %}
-  <div class="meal-row">
+{% block page_css %}
+<link rel="stylesheet" href="{{ css_root }}/allergy_table.css">
+<link rel="stylesheet" href="{{ css_root }}/new_meals.css">
+{% endblock %}
 
-    <span class="meal-id">{{ meal_id }}</span>
+{% block content %}
+<h2>新規メニュー登録</h2>
 
-    <!-- サーバが必要とする key を揃える -->
-    <input type="hidden" name="items[{{ loop.index0 }}][meal_id]" value="{{ meal_id }}">
+<p class="description-text">
+  アレルギー解析で新しく検出されたメニューです。<br>
+  一か月メニューPDFを確認し、正式名称を入力してください。
+</p>
 
-    <input type="text" name="items[{{ loop.index0 }}][meal_name]" placeholder="メニュー名">
-    <input type="text" name="items[{{ loop.index0 }}][furigana]" placeholder="ふりがな">
+<form id="new-meals-form" method="post" action="/api/admin/allergy_admin/new_meals">
 
-    <input type="number" name="items[{{ loop.index0 }}][kcal]" step="0.1">
-    <input type="number" name="items[{{ loop.index0 }}][protein]" step="0.1">
-    <input type="number" name="items[{{ loop.index0 }}][fat]" step="0.1">
-    <input type="number" name="items[{{ loop.index0 }}][carb]" step="0.1">
-    <input type="number" name="items[{{ loop.index0 }}][salt]" step="0.1">
+  <table class="new-meal-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>正式名称（必須）</th>
+        <th>ふりがな</th>
+        <th>kcal</th>
+        <th>タンパク質</th>
+        <th>脂質</th>
+        <th>炭水化物</th>
+        <th>塩分</th>
+      </tr>
+    </thead>
 
-  </div>
-  {% endfor %}
+    <tbody>
+      {% for meal_id in new_meal_ids %}
+      <tr>
 
-  <!-- 本来の submit ボタンは使わない -->
-  <button type="button" id="register-all" class="primary-button">
-    すべて登録する
-  </button>
+        <!-- ID（hidden + 表示） -->
+        <td class="meal-id">
+          {{ meal_id }}
+          <input type="hidden" name="items[{{ loop.index0 }}][meal_id]" value="{{ meal_id }}">
+        </td>
+
+        <!-- 名称 -->
+        <td>
+          <input type="text" name="items[{{ loop.index0 }}][meal_name]" placeholder="メニュー名" class="input-text">
+        </td>
+
+        <!-- ふりがな -->
+        <td>
+          <input type="text" name="items[{{ loop.index0 }}][furigana]" placeholder="ふりがな" class="input-text">
+        </td>
+
+        <!-- kcal -->
+        <td>
+          <input type="number" step="0.1" name="items[{{ loop.index0 }}][kcal]" class="input-num">
+        </td>
+
+        <!-- protein -->
+        <td>
+          <input type="number" step="0.1" name="items[{{ loop.index0 }}][protein]" class="input-num">
+        </td>
+
+        <!-- fat -->
+        <td>
+          <input type="number" step="0.1" name="items[{{ loop.index0 }}][fat]" class="input-num">
+        </td>
+
+        <!-- carb -->
+        <td>
+          <input type="number" step="0.1" name="items[{{ loop.index0 }}][carb]" class="input-num">
+        </td>
+
+        <!-- salt -->
+        <td>
+          <input type="number" step="0.1" name="items[{{ loop.index0 }}][salt]" class="input-num">
+        </td>
+
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <input type="hidden" name="token" value="{{ token }}">
+  <button type="submit" id="register-all" class="primary-button">すべて登録する</button>
 
 </form>
+
+{% endblock %}
+
+{% block page_js %}
+<script src="{{ js_root }}/new_meals.js"></script>
+{% endblock %}

@@ -15,11 +15,20 @@
       <span class="legend-new">青色</span>: 新規メニュー /
       <span class="legend-updated">黄色</span>: アレルゲン変更
     </td>
+    {# --- DB登録ボタン（状態を is_after_confirm で切り替え） --- #}
     <td class="button-cell">
-      <button type="button" class="primary-button" id="commit-submit" data-token="{{ token }}">DB に登録する</button>
+      {% if not is_after_confirm %}
+      <button type="button" class="primary-button" id="commit-submit" data-token="{{ token }}">
+        DB に登録する
+      </button>
+      {% else %}
+      <button type="button" class="disabled-button" disabled>
+        登録が完了しました
+      </button>
+      {% endif %}
     </td>
     <td class="button-cell">
-      {% if meal_new|length > 0 %}
+      {% if is_after_confirm and meal_new|length > 0 %}
       <button type="button" class="primary-button" id="register-action" data-token="{{ token }}">新規メニューの登録へ</button>
       {% endif %}
     </td>
@@ -69,8 +78,8 @@
     </thead>
     <tbody>
       {% for row in preview_data %}
-      <tr {% if row.meal_id in new_meal_ids %}class="row-new" {% elif row.meal_id in updated_meal_ids
-        %}class="row-updated" {% endif %}>
+      <tr {% if row.meal_id in meal_new %}class="row-new" {% elif row.meal_id in allergy_updated %} class="row-updated"
+        {% endif %}>
         <td>{{ row.meal_id }}</td>
         <td>{{ row.name }}</td>
         <td>{{ '●' if row.egg else '' }}</td>

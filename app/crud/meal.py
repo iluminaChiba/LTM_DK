@@ -1,8 +1,7 @@
 # app/crud/meal.py
-
 from sqlalchemy.orm import Session
 from app import models, schemas
-
+from typing import Any # 汎用的に Any を使うこともできます
 
 # ============================================================
 # Create
@@ -15,12 +14,14 @@ def create_meal(db: Session, data: schemas.MealCreate):
     return meal
 
 
-def create_meal_if_not_exists(db: Session, data: schemas.MealCreate):
-    existing_meal = get_meal(db, data.meal_id)
+def create_meal_if_not_exists(db: Session, data: dict): #型ヒントを dict にしておく
+    # existing_meal をチェックするために、辞書としてアクセス
+    existing_meal = get_meal(db, data["meal_id"])
+    
     if existing_meal:
-        return existing_meal
-    return create_meal(db, data)
-
+        return False
+    # create_meal に渡す直前に Pydantic モデルに変換する
+    return create_meal(db, schemas.MealCreate(**data))
 
 # ============================================================
 # Read
