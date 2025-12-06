@@ -1,0 +1,28 @@
+<form id="new-meals-form" data-token="{{ token }}">
+
+  {% for meal_id in new_meal_ids %}
+  <div class="meal-row">
+
+    <span class="meal-id">{{ meal_id }}</span>
+
+    <!-- サーバが必要とする key を揃える -->
+    <input type="hidden" name="items[{{ loop.index0 }}][meal_id]" value="{{ meal_id }}">
+
+    <input type="text" name="items[{{ loop.index0 }}][meal_name]" placeholder="メニュー名">
+    <input type="text" name="items[{{ loop.index0 }}][furigana]" placeholder="ふりがな">
+
+    <input type="number" name="items[{{ loop.index0 }}][kcal]" step="0.1">
+    <input type="number" name="items[{{ loop.index0 }}][protein]" step="0.1">
+    <input type="number" name="items[{{ loop.index0 }}][fat]" step="0.1">
+    <input type="number" name="items[{{ loop.index0 }}][carb]" step="0.1">
+    <input type="number" name="items[{{ loop.index0 }}][salt]" step="0.1">
+
+  </div>
+  {% endfor %}
+
+  <!-- 本来の submit ボタンは使わない -->
+  <button type="button" id="register-all" class="primary-button">
+    すべて登録する
+  </button>
+
+</form>

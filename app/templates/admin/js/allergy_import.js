@@ -4,6 +4,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const tableViewBtn = document.getElementById("tableview-action");
     const previewArea = document.getElementById("previewArea");
 
+    tableViewBtn.disabled = true;
+
     // プレビュー処理
     previewBtn.addEventListener("click", async () => {
         const file = fileInput.files[0];
@@ -44,14 +46,14 @@ document.addEventListener("DOMContentLoaded", () => {
             const data = await res.json();
             console.log("Success data:", data);
 
-            // トークンを保存
-            window.allergyToken = data.token;
+            // トークンをボタンのdata属性に保存
+            tableViewBtn.dataset.token = data.token;
 
             // 可読性のため整形して表示
             previewArea.textContent = JSON.stringify(data, null, 2);
 
             // テーブル表示ボタンを有効化
-            goTableViewBtn.disabled = false;
+            tableViewBtn.disabled = false;
 
         } catch (err) {
             console.error("Fetch error:", err);
@@ -60,11 +62,14 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     tableViewBtn.addEventListener("click", () => {
-        if (!window.allergyToken) {
+        const token = tableViewBtn.dataset.token;
+        if (!token) {
             alert("トークンがありません。先にプレビューを実行してください。");
             return;
         }
-        window.location.href = `/api/admin/allergy_admin/table-view/${window.allergyToken}`;
+        const url = `/api/admin/allergy_admin/table-view/${token}`;
+        console.log("Navigating to:", url);
+        window.location.href = url;
     });
 
 

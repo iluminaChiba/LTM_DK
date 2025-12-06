@@ -45,7 +45,14 @@ h2 {
   font-size: 14px;
 }
 
+.primary-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  background-color: #cccccc;
+  color: #666666;
+  border-color: #aaaaaa;
+}
+
 .primary-button:hover:not(:disabled) {
   background-color: #45a049;
 }
-/* ... その他、共通のテーブルスタイルなど... */

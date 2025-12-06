@@ -15,6 +15,13 @@ def create_meal(db: Session, data: schemas.MealCreate):
     return meal
 
 
+def create_meal_if_not_exists(db: Session, data: schemas.MealCreate):
+    existing_meal = get_meal(db, data.meal_id)
+    if existing_meal:
+        return existing_meal
+    return create_meal(db, data)
+
+
 # ============================================================
 # Read
 # ============================================================

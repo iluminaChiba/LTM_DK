@@ -22,17 +22,19 @@ ALLERGY_COLS = [
 
 
 # =========================================================
-# commit endpoint（最終形）
+# commit endpoint（token方式）
 # =========================================================
-@router.post("/confirm", response_model=None)
-def allergy_commit(db: Session = Depends(get_db)):
+@router.post("/confirm/{token}", response_model=None)
+def allergy_commit(token: str, db: Session = Depends(get_db)):
 
     # -----------------------------------------------------
-    # PREVIEW が存在するか？
+    # トークンに対応するPREVIEW が存在するか？
     # -----------------------------------------------------
-    preview = PREVIEW_CACHE.get("allergy_preview")
-    if not preview:
-        raise HTTPException(400, "PREVIEW が存在しません。先に /upload を実行してください。")
+    if token not in PREVIEW_CACHE:
+        raise HTTPException(404, "指定されたトークンに対応する解析データが見つかりません。")
+    
+    cache_data = PREVIEW_CACHE[token]
+    preview = cache_data["rows"]
 
     # -----------------------------------------------------
     # 既存アレルギー行を取得（差分判定用）
@@ -44,29 +46,18 @@ def allergy_commit(db: Session = Depends(get_db)):
     new_ids = []          # allergies に新規追加された ID
     updated_ids = []      # allergies が更新された ID
     unchanged_ids = []    # 変更なしの ID
-    new_meal_ids = []     # meals に存在しない新規メニュー ID（人間が登録すべき）
-    
-    # 既存 meals の ID セットを取得
-    meals_stmt = select(Meal.meal_id)
-    existing_meal_ids = set(db.scalars(meals_stmt).all())
+    # ▼ PREVIEW で既に計算されたメニュー差分
+    meal_new = cache_data.get("meal_new", [])
 
     # -----------------------------------------------------
     # PREVIEW の全レコードを処理
     # -----------------------------------------------------
     for item in preview:
         meal_id = item["meal_id"]
-
-        # -------------------------------------------------
-        # meals に存在しない ID を検出（新規メニュー）
-        # -------------------------------------------------
-        if meal_id not in existing_meal_ids:
-            new_meal_ids.append(meal_id)
-
         # -------------------------------------------------
         # allergies 側の差分処理
         # -------------------------------------------------
         old = existing_rows.get(meal_id)
-
         if old is None:
             # -------- 新規 INSERT --------
             new_allergy = Allergy(
@@ -105,7 +96,6 @@ def allergy_commit(db: Session = Depends(get_db)):
     except Exception as e:
         db.rollback()
         raise HTTPException(500, f"DB書き込み中にエラー: {e}")
-
     # -----------------------------------------------------
     # 完了レスポンス
     # -----------------------------------------------------
@@ -116,7 +106,6 @@ def allergy_commit(db: Session = Depends(get_db)):
         "updated_allergies": updated_ids,
         "unchanged_allergies": unchanged_ids,
         "disappeared_allergies": disappeared_ids,
-
-        # ★これが最重要：事務方が登録すべき新規メニュー
-        "new_meal_ids": sorted(new_meal_ids),
+        # 事務方が登録すべき新規メニュー
+        "new_meal_ids": meal_new,
     }

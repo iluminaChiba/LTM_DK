@@ -1,15 +1,19 @@
-from fastapi import APIRouter, Request, UploadFile, File, HTTPException
+from fastapi import APIRouter, Request, UploadFile, File, HTTPException, Depends
 from fastapi.responses import HTMLResponse
-from fastapi.templating import Jinja2Templates
 import pandas as pd
 import tempfile
 from pathlib import Path
 import pdfplumber
 from uuid import uuid4
+from sqlalchemy.orm import Session
+from sqlalchemy import select
 from app.core.preview_cache import PREVIEW_CACHE
+from app.core.templates import templates
+from app.core.database import get_db
+from app.models.meal import Meal
+from app.models.allergy import Allergy
 
 router = APIRouter()
-templates = Jinja2Templates(directory="app/templates")
 
 # ---------------------------------------------------------
 # 公式アレルゲン29列（labels.csv 順）
@@ -225,21 +229,33 @@ def detect_column(x0: float, col_centers):
     return min(range(len(col_centers)), key=lambda i: abs(col_centers[i] - x0))
 
 
+def get_all_meal_ids_from_db(db: Session) -> set[int]:
+    """
+    データベースから全てのmeal_idを取得してセットで返す
+    """
+    stmt = select(Meal.meal_id)
+    result = db.scalars(stmt).all()
+    result_list = list(result)
+    print(f"DEBUG [get_all_meal_ids_from_db]: result count = {len(result_list)}")
+    print(f"DEBUG [get_all_meal_ids_from_db]: first 10 = {result_list[:10]}")
+    result_set = set(result_list)
+    print(f"DEBUG [get_all_meal_ids_from_db]: set size = {len(result_set)}")
+    return result_set
+
+
 # =========================================================
 # ルーティング
 # =========================================================
 @router.get("/import", response_class=HTMLResponse)
 def allergy_ui(request: Request):
     context = {
-        "request": request,
-        "css_root": "/api/admin/css",  # ← この変数を渡す
-        "js_root": "/api/admin/js"     # ← この変数を渡す
+        "request": request
     }
     return templates.TemplateResponse("admin/allergy_import.html", context)
 
 
 @router.post("/upload")
-async def allergy_upload(file: UploadFile = File(...)):
+async def allergy_upload(file: UploadFile = File(...), db: Session = Depends(get_db)):
     if not file.filename.lower().endswith(".pdf"):
         raise HTTPException(400, "PDFファイルを指定してください。")
 
@@ -342,21 +358,82 @@ async def allergy_upload(file: UploadFile = File(...)):
             df = pd.DataFrame(results)
 
             preview_json = df.where(pd.notnull(df), None).to_dict(orient="records")
+            
+            # ------------------------------------------------------------
+            # 2. allergies × PDF の比較（アレルギー差分）
+            # ------------------------------------------------------------
+            existing_allergies = {
+                row.meal_id: row for row in db.scalars(select(Allergy)).all()
+            }
+
+            incoming_ids = { row["meal_id"] for row in preview_json }
+
+            allergy_new = []
+            allergy_updated = []
+            allergy_unchanged = []
+
+            for row in preview_json:
+                meal_id = row["meal_id"]
+                if meal_id not in existing_allergies:
+                    allergy_new.append(meal_id)
+                else:
+                    # 既存レコードと比較 → 変更あり？
+                    model = existing_allergies[meal_id]
+                    # model.__dict__ と row の一致チェック
+                    changed = False
+                    for key, value in row.items():
+                        if hasattr(model, key) and getattr(model, key) != value:
+                            changed = True
+                            break
+                    if changed:
+                        allergy_updated.append(meal_id)
+                    else:
+                        allergy_unchanged.append(meal_id)
+
+            # ------------------------------------------------------------
+            # 3. meals × PDF の比較（新規メニュー差分）
+            # ------------------------------------------------------------
+            existing_meals = set(db.scalars(select(Meal.meal_id)).all())
+
+            meal_new = sorted(incoming_ids - existing_meals)
+            meal_existing = sorted(incoming_ids & existing_meals)
 
             token = str(uuid4()) # シンプルなトークンを生成
             
-            # トークンをキーとしてデータを格納
-            PREVIEW_CACHE[token] = preview_json 
-            
-            # 従来の PREVIEW_CACHE["allergy_preview"] は廃止/不要
+            # ------------------------------------------------------------
+            # 4. PREVIEW_CACHE の正式形
+            # ------------------------------------------------------------
+            PREVIEW_CACHE[token] = {
+                "rows": preview_json,
 
+                # アレルギー差分
+                "allergy_new": allergy_new,
+                "allergy_updated": allergy_updated,
+                "allergy_unchanged": allergy_unchanged,
+
+                # メニュー差分
+                "meal_new": meal_new,
+                "meal_existing": meal_existing,
+            }
+            # ------------------------------------------------------------
+            # 5. フロント側への返り値 — 人間確認用
+            # ------------------------------------------------------------
             return {
                 "status": "ok",
-                "rows": len(preview_json),
-                "token": token,  # <-- 1. クライアントにトークンを返す
-                "records": preview_json, # <-- 2. デバッグのため、JSONデータも返す
-            }
+                "token": token,
+                "total_preview_rows": len(preview_json),
 
+                # アレルギー差分
+                "allergy_new": allergy_new,
+                "allergy_updated": allergy_updated,
+                "allergy_unchanged": allergy_unchanged,
+
+                # メニュー差分
+                "meal_new": meal_new,
+                "meal_existing": meal_existing,
+
+                "records": preview_json,
+            }            
     except HTTPException:
         raise
     except Exception as e:
@@ -366,34 +443,3 @@ async def allergy_upload(file: UploadFile = File(...)):
     finally:
         tmp_path.unlink(missing_ok=True)
 
-
-@router.get("/register/{token}")
-async def allergy_register_ui(token: str, request: Request):
-    """
-    指定されたトークンを使ってキャッシュされた解析データを表示する登録画面
-    """
-    if token not in PREVIEW_CACHE:
-        raise HTTPException(404, detail="指定されたトークンに対応する解析データが見つかりません。")
-
-    preview_data = PREVIEW_CACHE[token]
-    
-    return templates.TemplateResponse(
-        "admin/allergy_register.html",
-        {
-            "request": request,
-            "preview": preview_data,
-            "css_root": "/api/admin/css",
-            "js_root": "/api/admin/js"
-        }
-    )
-
-
-@router.get("/data/{token}")
-async def get_cached_data(token: str):
-    """
-    指定されたトークンを使ってキャッシュされた解析データを取得する（API用）
-    """
-    if token not in PREVIEW_CACHE:
-        raise HTTPException(404, detail="指定されたトークンに対応する解析データが見つかりません。")
-
-    return PREVIEW_CACHE[token]

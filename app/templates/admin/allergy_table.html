@@ -12,14 +12,15 @@
   <tr>
     <td class="description-cell">
       アレルギー表の内容を確認し、問題なければ右の「DBに登録する」を押してください。<br>
-      新規メニューに該当する行は背景色を変えてあります。
+      <span class="legend-new">青色</span>: 新規メニュー /
+      <span class="legend-updated">黄色</span>: アレルゲン変更
     </td>
     <td class="button-cell">
-      <button type="button" class="primary-button" id="commit-submit">DB に登録する</button>
+      <button type="button" class="primary-button" id="commit-submit" data-token="{{ token }}">DB に登録する</button>
     </td>
-    <td class="link-cell">
-      {% if new_meal_ids|length > 0 %}
-      <button type="button" class="primary-button" id="register-action">新規メニューの登録へ</button>
+    <td class="button-cell">
+      {% if meal_new|length > 0 %}
+      <button type="button" class="primary-button" id="register-action" data-token="{{ token }}">新規メニューの登録へ</button>
       {% endif %}
     </td>
   </tr>
@@ -68,7 +69,8 @@
     </thead>
     <tbody>
       {% for row in preview_data %}
-      <tr>
+      <tr {% if row.meal_id in new_meal_ids %}class="row-new" {% elif row.meal_id in updated_meal_ids
+        %}class="row-updated" {% endif %}>
         <td>{{ row.meal_id }}</td>
         <td>{{ row.name }}</td>
         <td>{{ '●' if row.egg else '' }}</td>
@@ -111,6 +113,8 @@
 </div>
 {% endif %}
 
+{% endblock %}
 
-
+{% block page_js %}
+<script src="{{ js_root }}/allergy_table.js"></script>
 {% endblock %}

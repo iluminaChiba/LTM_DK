@@ -19,9 +19,12 @@ async def upload_excel_order(file: UploadFile = File(...)):
         # Excel解析
         preview_data = await parse_excel_order(content, file.filename)
         
-        # トークン発行してキャッシュに保存
+        # トークン発行してキャッシュに保存（dict形式）
         token = secrets.token_hex(8)
-        PREVIEW_CACHE[token] = preview_data
+        PREVIEW_CACHE[token] = {
+            "rows": preview_data,
+            "type": "excel_order"
+        }
         
         return {
             "status": "success",
